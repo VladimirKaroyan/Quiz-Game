@@ -4,7 +4,7 @@
       <div *ngFor="let question of questions; index as questionNum" [hidden]="questionNum !== currentQuestion">
         <div class="question">
           <h3><span class="badge badge-warning" id="qid">{{questionNum + 1}}</span>
-            <span id="question"> {{question['question']}}</span>
+            <span id="question">{{question['question']}}</span>
           </h3>
         </div>
         <ul class="answers">
