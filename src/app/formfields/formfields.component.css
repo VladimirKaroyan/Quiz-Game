@@ -1,0 +1,33 @@
+.submit-button {
+  padding: 15px;
+}
+
+mat-radio-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+mat-radio-group > * {
+  padding: 5px 0;
+}
+
+.radio-buttons {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+mat-label.error-class {
+  color: #f44336;
+}
+
+.required-field:after {
+  content: " *";
+  color: red;
+}
+
+/*.fields-container {*/
+/*  display: flex;*/
+/*  flex-wrap: wrap;*/
+/*  padding: 0;*/
+/*}*/
