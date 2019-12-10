@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, Validators, ReactiveFormsModule} from '@angular/forms';
+import {AppComponent} from '../app.component';
 
 @Component({
   selector: 'app-formfields',
@@ -7,10 +7,6 @@ import {FormControl, Validators, ReactiveFormsModule} from '@angular/forms';
   styleUrls: ['./formfields.component.css']
 })
 export class FormfieldsComponent implements OnInit {
-  emailFormControl = new FormControl('', [
-    Validators.required,
-    Validators.email,
-  ]);
   formFields = {
     appFields: [
       {
@@ -53,7 +49,7 @@ export class FormfieldsComponent implements OnInit {
         name: 'mobile_phone',
         type: 'text',
         required: false,
-        selected: true,
+        selected: false,
         title: 'Mobile Phone',
         options: [],
         display: 'selected'
@@ -172,7 +168,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'category',
         type: 'checkbox',
-        required: false,
+        required: true,
         selected: true,
         title: 'Category',
         options: [
@@ -189,6 +185,31 @@ export class FormfieldsComponent implements OnInit {
           {
             key: '3',
             value: '3',
+            default: false
+          }
+        ],
+        display: 'selected'
+      },
+      {
+        name: 'ready',
+        type: 'checkbox',
+        required: true,
+        selected: true,
+        title: 'Test',
+        options: [
+          {
+            key: '321312',
+            value: '4353453',
+            default: false
+          },
+          {
+            key: '32131231',
+            value: '5664',
+            default: false
+          },
+          {
+            key: '6757567',
+            value: '97898797',
             default: false
           }
         ],
@@ -263,15 +284,6 @@ export class FormfieldsComponent implements OnInit {
         required: false,
         selected: true,
         title: 'Who is your sales representative?',
-        options: [],
-        display: 'selected'
-      },
-      {
-        name: 'category',
-        type: 'text',
-        required: false,
-        selected: true,
-        title: 'Category',
         options: [],
         display: 'selected'
       },
@@ -2027,26 +2039,60 @@ export class FormfieldsComponent implements OnInit {
     badge_scanning: true
   };
   fields: object = {};
+  checkBoxes = [];
+  form = [];
 
-  constructor() {
+  constructor(private appComponent: AppComponent) {
   }
 
   ngOnInit() {
     // Separate Fields
     this.formFields.appFields.forEach(one => {
-      if (one.type === 'select' && one.name === 'state') {
-        this.fields.stateInput = one;
-        this.fields.stateInput.defaultValue = 'CA';
-      } else if (this.fields[one.type] !== undefined) {
-        this.fields[one.type].push(one);
-      } else {
-        this.fields[one.type] = [one];
+      if (one.selected) {
+        if (this.fields[one.type] !== undefined) {
+          this.fields[one.type].push(one);
+        } else {
+          this.fields[one.type] = [one];
+        }
       }
     });
-    console.log(this.fields);
+  }
+
+  findOnJson(data, value) {
+    return data.findIndex((item, i) => {
+      return item.name === value;
+    });
   }
 
   onSubmit(formElement) {
-    console.log(JSON.parse(JSON.stringify(formElement.value)));
+    if (formElement.valid) {
+      const fields = JSON.parse(JSON.stringify(formElement.value));
+      this.form = [];
+      Object.keys(fields).forEach((key) => {
+        if (key.indexOf('checkboxfield-') === -1) {
+          this.form.push({
+            name: key,
+            value: formElement.value[key],
+          });
+        }
+      });
+      this.form = this.form.concat(this.checkBoxes);
+      this.appComponent.isCompletedFields = true;
+    }
+  }
+
+  getCheckBoxes(inputName, inputValue, isChecked) {
+    const index = this.findOnJson(this.checkBoxes, inputName);
+    if (index === -1) {
+      this.checkBoxes.push({
+        name: inputName,
+        value: [inputValue]
+      });
+    } else if (index !== -1 && isChecked) {
+      this.checkBoxes[index].value.push(inputValue);
+    } else if (index !== -1 && !isChecked) {
+      const valueInd = this.checkBoxes[index].value.indexOf(inputValue);
+      this.checkBoxes[index].value.splice(valueInd, 1);
+    }
   }
 }
