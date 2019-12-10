@@ -17,7 +17,11 @@ mat-radio-group > * {
   flex-wrap: wrap;
 }
 
-mat-label.error-class {
+mat-label.required-field {
+  color: black;
+}
+
+mat-label.error-class, mat-checkbox.ng-touched.ng-invalid, mat-radio-group.ng-touched.ng-invalid {
   color: #f44336;
 }
 

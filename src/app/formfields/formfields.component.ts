@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AppComponent} from '../app.component';
+import {ignoreElements} from 'rxjs/operators';
 
 @Component({
   selector: 'app-formfields',
@@ -15,6 +16,15 @@ export class FormfieldsComponent implements OnInit {
         required: true,
         selected: true,
         title: 'First Name',
+        options: [],
+        display: 'selected'
+      },
+      {
+        name: 'state',
+        type: 'select',
+        required: false,
+        selected: true,
+        title: 'State/Province',
         options: [],
         display: 'selected'
       },
@@ -193,7 +203,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'ready',
         type: 'checkbox',
-        required: true,
+        required: false,
         selected: true,
         title: 'Test',
         options: [
@@ -2032,13 +2042,9 @@ export class FormfieldsComponent implements OnInit {
         name: 'Wyoming'
       }
     ],
-    // tslint:disable-next-line:max-line-length
-    thank_you_modal_img: 'https://s3.us-west-2.amazonaws.com/files.highattendance.com/uploads/applications/thank-you-logos/bHIxqXGHHgT0dw8U8bdOgB2019-11-06.gif',
-    thank_you_modal_msg: '<p>Your content has been emailed. Thank you for joining <b>HackTech </b></p>\n',
     appName: 'DCB Naira',
-    badge_scanning: true
   };
-  fields: object = {};
+  fields = {};
   checkBoxes = [];
   form = [];
 
@@ -2049,7 +2055,9 @@ export class FormfieldsComponent implements OnInit {
     // Separate Fields
     this.formFields.appFields.forEach(one => {
       if (one.selected) {
-        if (this.fields[one.type] !== undefined) {
+        if (one.type === 'select' && one.name === 'state') {
+          this.fields.stateInput = one;
+        } else if (this.fields[one.type] !== undefined) {
           this.fields[one.type].push(one);
         } else {
           this.fields[one.type] = [one];
@@ -2077,6 +2085,7 @@ export class FormfieldsComponent implements OnInit {
         }
       });
       this.form = this.form.concat(this.checkBoxes);
+      // console.log(this.form);
       this.appComponent.isCompletedFields = true;
     }
   }

@@ -36,17 +36,19 @@
                          [class.col-md-12]="fields.checkbox.length === 1"
                          [name]="checkBoxField.name">
           <mat-label [class.required-field]="checkBoxField.required">{{checkBoxField.title}}</mat-label>
-          <mat-checkbox *ngFor="let option of checkBoxField.options" ngModel
-                        [required]="checkBoxField.required"
-                        [name]=" 'checkboxfield-' + checkBoxField.name "
+          <!--          ngModel-->
+          <!--          [required]="checkBoxField.required"-->
+          <!--          [name]=" 'checkboxfield-' + checkBoxField.name "-->
+          <mat-checkbox *ngFor="let option of checkBoxField.options"
+                        color="primary"
                         (change)="getCheckBoxes(checkBoxField.name, option.value, $event.checked)"
                         [value]="option.key">{{option.value}}</mat-checkbox>
         </mat-radio-group>
       </div>
       <div class="select-boxes">
         <mat-form-field *ngFor="let selectField of fields.select"
-                        [class.col-md-6]="fields.select.length > 1"
-                        [class.col-md-12]="fields.select.length === 1">
+                        [class.col-md-6]="fields.select.length > 1 || fields.stateInput.length !== 0"
+                        [class.col-md-12]="fields.select.length === 1 && fields.stateInput.length > 0">
           <mat-label>{{ selectField.title }}</mat-label>
           <mat-select [required]="selectField.required" [name]="selectField.name" ngModel>
             <mat-option *ngFor="let option of selectField.options" [value]="option.key">
@@ -55,16 +57,16 @@
           </mat-select>
         </mat-form-field>
         <!--        Field for state-->
-        <!--        <mat-form-field *ngIf="fields.stateInput"-->
-        <!--                        [class.col-md-6]="fields.text.length > 1"-->
-        <!--                        [class.col-md-12]="fields.text.length === 1">-->
-        <!--          <mat-label>{{ fields.stateInput.title }}</mat-label>-->
-        <!--          <mat-select [required]="fields.stateInput.required" [name]="fields.stateInput.name" ngModel>-->
-        <!--            <mat-option *ngFor="let option of formFields.states" [value]="option.code">-->
-        <!--              {{option.name}}-->
-        <!--            </mat-option>-->
-        <!--          </mat-select>-->
-        <!--        </mat-form-field>-->
+        <mat-form-field *ngIf="fields.stateInput"
+                        [class.col-md-6]="fields.select.length !== 0"
+                        [class.col-md-12]="fields.select.length === 0">
+          <mat-label>{{ fields.stateInput.title }}</mat-label>
+          <mat-select [required]="fields.stateInput.required" [name]="fields.stateInput.name" ngModel>
+            <mat-option *ngFor="let option of formFields.states" [value]="option.code">
+              {{option.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
       <div class="multiselect-boxes">
         <mat-form-field *ngFor="let multiSelectField of fields['multi-select']"
