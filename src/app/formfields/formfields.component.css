@@ -12,7 +12,7 @@ mat-radio-group > * {
   padding: 5px 0;
 }
 
-.radio-buttons {
+.radio-buttons, .checkbox-fields {
   display: flex;
   flex-wrap: wrap;
 }
@@ -25,13 +25,15 @@ mat-label.error-class, mat-checkbox.ng-touched.ng-invalid, mat-radio-group.ng-to
   color: #f44336;
 }
 
+.container {
+  padding: 0 !important;
+}
+
+form > .col-md-12 {
+  padding: 0;
+}
+
 .required-field:after {
   content: " *";
   color: red;
 }
-
-/*.fields-container {*/
-/*  display: flex;*/
-/*  flex-wrap: wrap;*/
-/*  padding: 0;*/
-/*}*/

@@ -13,7 +13,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'first_name',
         type: 'text',
-        required: true,
+        required: false,
         selected: true,
         title: 'First Name',
         options: [],
@@ -31,7 +31,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'last_name',
         type: 'text',
-        required: true,
+        required: false,
         selected: true,
         title: 'Last Name',
         options: [],
@@ -49,7 +49,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'email',
         type: 'text',
-        required: true,
+        required: false,
         selected: true,
         title: 'Email',
         options: [],
@@ -67,7 +67,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'industry',
         type: 'select',
-        required: true,
+        required: false,
         selected: true,
         title: 'Industry',
         options: [
@@ -178,7 +178,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'category',
         type: 'checkbox',
-        required: true,
+        required: false,
         selected: true,
         title: 'Category',
         options: [
@@ -228,7 +228,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'notes',
         type: 'textarea',
-        required: true,
+        required: false,
         selected: true,
         title: 'Notes',
         options: [],
@@ -246,7 +246,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'country',
         type: 'text',
-        required: true,
+        required: false,
         selected: true,
         title: 'Country',
         options: [],
@@ -255,7 +255,7 @@ export class FormfieldsComponent implements OnInit {
       {
         name: 'Are you a public employee',
         type: 'radio',
-        required: true,
+        required: false,
         selected: true,
         title: 'Are you a public employee',
         options: [
@@ -2044,7 +2044,15 @@ export class FormfieldsComponent implements OnInit {
     ],
     appName: 'DCB Naira',
   };
-  fields = {};
+  fields = {
+    select: [],
+    text: [],
+    textarea: [],
+    radio: [],
+    multi: [],
+    checkbox: [],
+    stateInput: [],
+  };
   checkBoxes = [];
   form = [];
 
@@ -2054,13 +2062,12 @@ export class FormfieldsComponent implements OnInit {
   ngOnInit() {
     // Separate Fields
     this.formFields.appFields.forEach(one => {
+      const type = (one.type === 'select' && one.name === 'state') ? 'stateInput' : one.type;
       if (one.selected) {
-        if (one.type === 'select' && one.name === 'state') {
-          this.fields.stateInput = one;
-        } else if (this.fields[one.type] !== undefined) {
-          this.fields[one.type].push(one);
+        if (this.fields[one.type] !== undefined) {
+          this.fields[type].push(one);
         } else {
-          this.fields[one.type] = [one];
+          this.fields[type] = [one];
         }
       }
     });

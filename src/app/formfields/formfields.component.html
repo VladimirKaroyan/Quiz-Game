@@ -11,6 +11,41 @@
                  [email]="textField.name === 'email' ">
         </mat-form-field>
       </div>
+      <div class="select-boxes">
+        <mat-form-field *ngFor="let selectField of fields.select"
+                        [class.col-md-6]="fields.select.length > 1 || (fields.stateInput && fields.stateInput.length !== 0)"
+                        [class.col-md-12]="fields.select.length === 1 && !fields.stateInput.length">
+          <mat-label>{{ selectField.title }}</mat-label>
+          <mat-select [required]="selectField.required" [name]="selectField.name" ngModel>
+            <mat-option *ngFor="let option of selectField.options" [value]="option.key">
+              {{option.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <!--        Field for state-->
+        <mat-form-field *ngIf="fields.stateInput.length"
+                        [class.col-md-6]="fields.select.length !== 0"
+                        [class.col-md-12]="fields.select.length === 0">
+          <mat-label>{{ fields.stateInput[0].title }}</mat-label>
+          <mat-select [required]="fields.stateInput[0].required" [name]="fields.stateInput[0].name" ngModel>
+            <mat-option *ngFor="let option of formFields.states" [value]="option.code">
+              {{option.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="multiselect-boxes">
+        <mat-form-field *ngFor="let multiSelectField of fields['multi-select']"
+                        [class.col-md-6]="fields['multi-select'].length > 1"
+                        [class.col-md-12]="fields['multi-select'].length === 1">
+          <mat-label>{{ multiSelectField.title }}</mat-label>
+          <mat-select [required]="multiSelectField.required" [name]="multiSelectField.name" multiple ngModel>
+            <mat-option *ngFor="let option of multiSelectField.options" [value]="option.key">
+              {{option.value}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <div class="textarea-fields">
         <mat-form-field *ngFor="let textAreaField of fields.textarea"
                         [class.col-md-6]="fields.textarea.length > 1"
@@ -44,41 +79,6 @@
                         (change)="getCheckBoxes(checkBoxField.name, option.value, $event.checked)"
                         [value]="option.key">{{option.value}}</mat-checkbox>
         </mat-radio-group>
-      </div>
-      <div class="select-boxes">
-        <mat-form-field *ngFor="let selectField of fields.select"
-                        [class.col-md-6]="fields.select.length > 1 || fields.stateInput.length !== 0"
-                        [class.col-md-12]="fields.select.length === 1 && fields.stateInput.length > 0">
-          <mat-label>{{ selectField.title }}</mat-label>
-          <mat-select [required]="selectField.required" [name]="selectField.name" ngModel>
-            <mat-option *ngFor="let option of selectField.options" [value]="option.key">
-              {{option.value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <!--        Field for state-->
-        <mat-form-field *ngIf="fields.stateInput"
-                        [class.col-md-6]="fields.select.length !== 0"
-                        [class.col-md-12]="fields.select.length === 0">
-          <mat-label>{{ fields.stateInput.title }}</mat-label>
-          <mat-select [required]="fields.stateInput.required" [name]="fields.stateInput.name" ngModel>
-            <mat-option *ngFor="let option of formFields.states" [value]="option.code">
-              {{option.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="multiselect-boxes">
-        <mat-form-field *ngFor="let multiSelectField of fields['multi-select']"
-                        [class.col-md-6]="fields['multi-select'].length > 1"
-                        [class.col-md-12]="fields['multi-select'].length === 1">
-          <mat-label>{{ multiSelectField.title }}</mat-label>
-          <mat-select [required]="multiSelectField.required" [name]="multiSelectField.name" multiple ngModel>
-            <mat-option *ngFor="let option of multiSelectField.options" [value]="option.key">
-              {{option.value}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
       </div>
       <div class="text-right submit-button">
         <button mat-raised-button type="submit" [disabled]="!form.valid" color="primary">Submit</button>

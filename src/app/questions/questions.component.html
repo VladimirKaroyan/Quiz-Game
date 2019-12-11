@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row questions-list" [hidden]="showUserScore">
-    <div class="col-sm-8 col-sm-offset-2">
+    <div class="col-md-10 col-lg-8 col-sm-offset-2">
       <div *ngFor="let question of questions; index as questionNum" [hidden]="questionNum !== currentQuestion">
         <div class="question">
           <h3><span class="badge badge-warning" id="qid">{{questionNum + 1}}</span>
