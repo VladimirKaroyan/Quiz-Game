@@ -9,7 +9,7 @@ import {trigger, state, transition, style, animate} from '@angular/animations';
     trigger('visibilityChanged', [
       state('shown',
         style({
-          display: 'block',
+          display: 'flex',
           visibility: 'visible',
           opacity: 1
         })),
@@ -26,6 +26,7 @@ import {trigger, state, transition, style, animate} from '@angular/animations';
 })
 export class AppComponent implements OnInit {
   title = 'QuizGame';
+  showLoader = true;
   isCompletedFields = false;
 
   ngOnInit() {

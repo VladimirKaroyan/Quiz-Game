@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AppComponent} from '../app.component';
 import {ApplicationService} from "../application.service";
+import {Title} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-formfields',
@@ -10,7 +11,7 @@ import {ApplicationService} from "../application.service";
 export class FormfieldsComponent implements OnInit {
   appId;
   eventId;
-  states: [];
+  states;
   fields = {
     select: [],
     text: [],
@@ -20,10 +21,10 @@ export class FormfieldsComponent implements OnInit {
     checkbox: [],
     stateInput: [],
   };
-  checkBoxes: [];
-  form: [];
+  checkBoxes;
+  form;
 
-  constructor(private appComponent: AppComponent, private appService: ApplicationService) {
+  constructor(private appComponent: AppComponent, private appService: ApplicationService, private titleService: Title) {
   }
 
   ngOnInit() {
@@ -31,9 +32,9 @@ export class FormfieldsComponent implements OnInit {
     this.appId = this.getURLParam('appId');
     this.appService.getAppFields(this.appId, this.eventId).subscribe(
       formFields => {
-        if (formFields.states) this.states = formFields.states;
-        if (formFields.appFields && formFields.appFields.length) {
-          formFields.appFields.forEach(one => {
+        if (formFields['states']) this.states = formFields['states'];
+        if (formFields['appFields'] && formFields['appFields'].length) {
+          formFields['appFields'].forEach(one => {
             const type = (one.type === 'select' && one.name === 'state') ? 'stateInput' : one.type;
             if (one.selected) {
               if (this.fields[one.type] !== undefined) {
@@ -44,6 +45,8 @@ export class FormfieldsComponent implements OnInit {
             }
           });
         }
+        this.appComponent.showLoader = false;
+        if (formFields['appName']) this.titleService.setTitle(formFields['appName']);
       },
       err => {
         console.warn(err);

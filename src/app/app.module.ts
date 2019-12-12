@@ -37,13 +37,15 @@ import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     QuestionsComponent,
-    FormfieldsComponent
+    FormfieldsComponent,
+    LoaderComponent
   ],
   imports: [
     HttpClientModule,

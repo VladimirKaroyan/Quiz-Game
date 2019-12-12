@@ -1,5 +1,4 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<app-header>
-</app-header>
+<app-header></app-header>
 <app-formfields [@visibilityChanged]="isCompletedFields ? 'hidden' : 'shown'"></app-formfields>
 <app-questions [@visibilityChanged]="isCompletedFields ? 'shown' : 'hidden'"></app-questions>
+<app-loader *ngIf="showLoader"></app-loader>
