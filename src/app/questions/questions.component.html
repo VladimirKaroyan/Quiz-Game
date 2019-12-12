@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="questions">
   <div class="row questions-list" [hidden]="showUserScore">
     <div class="col-md-10 col-lg-8 col-sm-offset-2">
       <div *ngFor="let question of questions; index as questionNum" [hidden]="questionNum !== currentQuestion">

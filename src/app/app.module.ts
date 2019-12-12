@@ -1,11 +1,11 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-
+import {HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {QuestionsComponent} from './questions/questions.component';
-import { FormfieldsComponent } from './formfields/formfields.component';
+import {FormfieldsComponent} from './formfields/formfields.component';
 import {MatCheckboxModule} from '@angular/material';
 import {MatButtonModule} from '@angular/material';
 import {MatInputModule} from '@angular/material/input';
@@ -46,6 +46,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     FormfieldsComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
     MatCheckboxModule,
