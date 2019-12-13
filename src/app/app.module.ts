@@ -6,6 +6,7 @@ import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {QuestionsComponent} from './questions/questions.component';
 import {FormfieldsComponent} from './formfields/formfields.component';
+import {NotFoundComponent} from './notfound/notfound.component';
 import {MatCheckboxModule} from '@angular/material';
 import {MatButtonModule} from '@angular/material';
 import {MatInputModule} from '@angular/material/input';
@@ -37,7 +38,14 @@ import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { LoaderComponent } from './loader/loader.component';
+import {LoaderComponent} from './loader/loader.component';
+import {MainComponent} from './main/main.component';
+import {RouterModule, Routes} from '@angular/router';
+
+const appRoutes: Routes = [
+  {path: '', component: MainComponent},
+  {path: 'error', component: NotFoundComponent},
+];
 
 @NgModule({
   declarations: [
@@ -45,9 +53,12 @@ import { LoaderComponent } from './loader/loader.component';
     HeaderComponent,
     QuestionsComponent,
     FormfieldsComponent,
-    LoaderComponent
+    LoaderComponent,
+    MainComponent,
+    NotFoundComponent
   ],
   imports: [
+    RouterModule.forRoot(appRoutes),
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
@@ -85,7 +96,7 @@ import { LoaderComponent } from './loader/loader.component';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [AppComponent],
+  providers: [MainComponent, AppComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

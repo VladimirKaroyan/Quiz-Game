@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {AppComponent} from '../app.component';
+import {MainComponent} from "../main/main.component";
 import {ApplicationService} from "../application.service";
+import {Router} from '@angular/router';
 import {Title} from "@angular/platform-browser";
 
 @Component({
@@ -24,7 +25,7 @@ export class FormfieldsComponent implements OnInit {
   checkBoxes;
   form;
 
-  constructor(private appComponent: AppComponent, private appService: ApplicationService, private titleService: Title) {
+  constructor(private mainComponent: MainComponent, private appService: ApplicationService, private titleService: Title, private router: Router) {
   }
 
   ngOnInit() {
@@ -32,6 +33,10 @@ export class FormfieldsComponent implements OnInit {
     this.appId = this.getURLParam('appId');
     this.appService.getAppFields(this.appId, this.eventId).subscribe(
       formFields => {
+        if (formFields['error']) {
+          this.mainComponent.showLoader = false;
+          return this.router.navigate(['../error']);
+        }
         if (formFields['states']) this.states = formFields['states'];
         if (formFields['appFields'] && formFields['appFields'].length) {
           formFields['appFields'].forEach(one => {
@@ -45,7 +50,7 @@ export class FormfieldsComponent implements OnInit {
             }
           });
         }
-        this.appComponent.showLoader = false;
+        this.mainComponent.showLoader = false;
         if (formFields['appName']) this.titleService.setTitle(formFields['appName']);
       },
       err => {
@@ -78,7 +83,7 @@ export class FormfieldsComponent implements OnInit {
       });
       this.form = this.form.concat(this.checkBoxes);
       // console.log(this.form);
-      this.appComponent.isCompletedFields = true;
+      this.mainComponent.isCompletedFields = true;
     }
   }
 
