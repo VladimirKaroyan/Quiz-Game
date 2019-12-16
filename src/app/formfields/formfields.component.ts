@@ -33,6 +33,7 @@ export class FormfieldsComponent implements OnInit {
     this.appId = this.getURLParam('appId');
     this.appService.getAppFields(this.appId, this.eventId).subscribe(
       formFields => {
+        this.checkBoxes = [];
         if (formFields['error']) {
           this.mainComponent.showLoader = false;
           return this.router.navigate(['../error']);
@@ -44,6 +45,11 @@ export class FormfieldsComponent implements OnInit {
             if (one.selected) {
               if (this.fields[one.type] !== undefined) {
                 this.fields[type].push(one);
+                if (type === 'checkbox') {
+                  for (let option of one.options) {
+                    this.getCheckBoxes(one.name, option.key, option.default);
+                  }
+                }
               } else {
                 this.fields[type] = [one];
               }
@@ -64,7 +70,7 @@ export class FormfieldsComponent implements OnInit {
   }
 
   findOnJson(data, value) {
-    return data.findIndex((item, i) => {
+    return data.findIndex((item) => {
       return item.name === value;
     });
   }
@@ -81,8 +87,7 @@ export class FormfieldsComponent implements OnInit {
           });
         }
       });
-      this.form = this.form.concat(this.checkBoxes);
-      // console.log(this.form);
+      if (this.checkBoxes && this.checkBoxes.length) this.form = this.form.concat(this.checkBoxes);
       this.mainComponent.isCompletedFields = true;
     }
   }
@@ -98,7 +103,7 @@ export class FormfieldsComponent implements OnInit {
       this.checkBoxes[index].value.push(inputValue);
     } else if (index !== -1 && !isChecked) {
       const valueInd = this.checkBoxes[index].value.indexOf(inputValue);
-      this.checkBoxes[index].value.splice(valueInd, 1);
+      if (valueInd !== -1) this.checkBoxes[index].value.splice(valueInd, 1);
     }
   }
 }

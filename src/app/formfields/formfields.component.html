@@ -77,6 +77,7 @@
           <mat-checkbox *ngFor="let option of checkBoxField.options"
                         color="primary"
                         (change)="getCheckBoxes(checkBoxField.name, option.value, $event.checked)"
+                        [checked]="option.default"
                         [value]="option.key">{{option.value}}</mat-checkbox>
         </mat-radio-group>
       </div>
