@@ -1,21 +1,71 @@
-<div class="container" *ngIf="questions">
+<div class="container" *ngIf="questionList">
   <div class="row questions-list" [hidden]="showUserScore">
     <div class="col-md-10 col-lg-8 col-sm-offset-2">
-      <div *ngFor="let question of questions; index as questionNum" [hidden]="questionNum !== currentQuestion">
-        <div class="question">
-          <h3><span class="badge badge-warning" id="qid">{{questionNum + 1}}</span>
-            <span id="question">{{question['question']}}</span>
-          </h3>
+      <div *ngFor="let question of questionList; index as questionNum" [hidden]="questionNum !== currentQuestion">
+        <div class="questions-radio" *ngIf="question['type'] === 'radio'">
+          <div class="question">
+            <h3><span class="badge badge-warning qid">{{questionNum + 1}}</span>
+              <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
+            </h3>
+          </div>
+          <mat-radio-group [name]="question['name']">
+            <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index"
+                 class="radio-button-group">
+              <mat-radio-button
+                id="{{questionNum}}-{{answerNum}}"
+                value="{{answer.key}}"
+                (change)="selectAnswer($event.value)">
+              </mat-radio-button>
+              <mat-label [innerHTML]="answer.value"></mat-label>
+            </div>
+          </mat-radio-group>
+          <button mat-raised-button
+                  [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'].length === 0"
+                  (click)="changeQuestion()"
+                  class="btn btn-primary pull-right"
+                  style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
         </div>
-        <ul class="answers">
-          <li *ngFor="let answer of question['options'] | keyvalue; let answerNum = index">
-            <input [disabled]="inputsDisabled" type="radio" id="{{questionNum}}-{{answerNum}}" name="selector"
-                   value="{{answer.key}}"
-                   (click)="selectAnswer(answer.key, $event)">
-            <label for="{{questionNum}}-{{answerNum}}" class="element-animation">{{answer.value}}</label>
-            <div class="check"></div>
-          </li>
-        </ul>
+        <div class="questions-checkbox" *ngIf="question['type'] === 'checkbox'">
+          <div class="question">
+            <h3><span class="badge badge-warning qid">{{questionNum + 1}}</span>
+              <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
+            </h3>
+          </div>
+          <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index" class="answers-box">
+            <mat-checkbox
+              id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
+              value="{{answer.key}}"
+              (change)="selectCheckBoxAnswer(answer.key, $event.checked)">
+            </mat-checkbox>
+            <mat-label [innerHTML]="answer.value"></mat-label>
+          </div>
+          <button mat-raised-button
+                  (click)="changeQuestion()"
+                  [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].length === 0"
+                  class="btn btn-primary pull-right"
+                  style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
+        </div>
+        <div class="questions-text" *ngIf="question['type'] === 'text'">
+          <div class="question">
+            <h3><span class="badge badge-warning qid">{{questionNum + 1}}</span>
+              <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
+            </h3>
+          </div>
+          <div class="answer">
+            <mat-form-field>
+              <input matInput
+                     [disabled]="inputsDisabled"
+                     type="text"
+                     id="{{questionNum}}-value"
+                     [name]="question['name']"
+                     (change)="selectAnswer($event.target['value'])">
+            </mat-form-field>
+          </div>
+          <button mat-raised-button (click)="changeQuestion()"
+                  [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'].length === 0"
+                  class="btn btn-primary pull-right"
+                  style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
+        </div>
       </div>
     </div>
   </div>

@@ -1,27 +1,59 @@
 [
   {
-    "question": "Which picture shows a Parrot?",
-    "options": {
+    "title": "Which pictures shows a <a href='http://google.com' target='_blank'>Parrot</a>?",
+    "name": "parrot_pict",
+    "type": "checkbox",
+    "required": true,
+    "answers": {
       "option1": "Parrot.png",
       "option2": "sss",
       "option3": "vv",
       "option4": "rte"
     },
-    "answer": "option3"
+    "answer": [
+      "option3",
+      "option4"
+    ]
   },
   {
-    "question": "Which picture shows a Peacock?",
-    "options": {
+    "title": "Which picture shows a Tooo?",
+    "name": "Tooo_pict",
+    "type": "text",
+    "required": false,
+    "answer": "first"
+  },
+  {
+    "title": "Which picture shows a Parrot?",
+    "name": "parrot_pict",
+    "type": "radio",
+    "required": false,
+    "answers": {
+      "option1": "Parrot.png",
+      "option2": "sss",
+      "option3": "vv",
+      "option4": "rte"
+    },
+    "answer": "option1"
+  },
+  {
+    "title": "Which picture shows a Peacock?",
+    "name": "peacock_pict",
+    "type": "radio",
+    "required": false,
+    "answers": {
       "option1": "dsad.png",
       "option2": "gfsdfg.png",
       "option3": "gfhgf.png",
       "option4": "jkhkjh.png"
     },
-    "answer": "option4"
+    "answer": "option1"
   },
   {
-    "question": "Which picture shows a Cockatoo?",
-    "options": {
+    "title": "Which picture shows a Cockatoo?",
+    "name": "cockatoo_pict",
+    "type": "radio",
+    "required": false,
+    "answers": {
       "option1": "gdfg.png",
       "option2": "Cardgffdinal.png",
       "option3": "sdfadas.png",
@@ -30,23 +62,29 @@
     "answer": "option1"
   },
   {
-    "question": "Which picture shows a Toucan?",
-    "options": {
+    "title": "Which picture shows a Toucan?",
+    "name": "toucan_pict",
+    "type": "radio",
+    "required": false,
+    "answers": {
       "option1": "jkhkgh.png",
       "option2": "jghjghjgh.png",
       "option3": "hg.png",
       "option4": "l;kj;kl;kl.png"
     },
-    "answer": "option2"
+    "answer": "option1"
   },
   {
-    "question": "Which picture shows a Quetzal?",
-    "options": {
+    "title": "Which picture shows a Quetzal?",
+    "name": "quetzal_pict",
+    "type": "radio",
+    "required": false,
+    "answers": {
       "option1": "sdadas.png",
       "option2": "dsadssads.png",
       "option3": "hjgjghjk.png",
       "option4": "iuyiyu.png"
     },
-    "answer": "option3"
+    "answer": "option1"
   }
 ]

@@ -11,7 +11,8 @@ export class QuestionsComponent implements OnInit {
   showUserScore = false;
   currentQuestion = 0;
   inputsDisabled = false;
-  questions;
+  questionList;
+  userAnswers = [];
   score: any = 0;
   quizResult: string;
   quizResultPercent = 0;
@@ -22,48 +23,73 @@ export class QuestionsComponent implements OnInit {
   ngOnInit() {
     this.appService.getQuestions().subscribe(
       questions => {
-        this.questions = questions;
+        this.questionList = questions;
+        for (let i in questions) {
+          if (questions[i]['type'] === 'checkbox') {
+            this.userAnswers.push({
+              id: i,
+              question: questions[i].name,
+              userAnswer: []
+            });
+          } else {
+            this.userAnswers.push({
+              id: i,
+              question: questions[i].name,
+              userAnswer: ''
+            });
+          }
+        }
       },
       (err) => {
         console.warn(err);
       });
   }
 
-  selectAnswer(answer, event) {
-    if (answer !== this.questions[this.currentQuestion].answer) {
-      event.target.classList.add('wrong');
-      // Disable all inputs when answer is selected
-      this.inputsDisabled = true;
-      // Change question after 2 seconds
-      setTimeout(() => {
-        this.changeQuestion();
-      }, 2000);
+  compareArrays(arr1, arr2) {
+    if (arr1.length != arr2.length) {
+      return false;
+    }
+    let a1 = arr1.map(e => JSON.stringify(e)).sort();
+    let a2 = arr2.map(e => JSON.stringify(e)).sort();
+    return !a1.map((e, i) => e == a2[i]).includes(false);
+  }
+
+  selectAnswer(answer) {
+    this.userAnswers[this.currentQuestion].userAnswer = answer;
+  }
+
+  selectCheckBoxAnswer(answer, isChecked) {
+    if (isChecked) {
+      this.userAnswers[this.currentQuestion].userAnswer.push(answer);
     } else {
-      this.score++;
-      event.target.classList.add('right');
-      // Disable all inputs when answer is selected
-      this.inputsDisabled = true;
-      // Change question after 2 seconds
-      setTimeout(() => {
-        this.changeQuestion();
-      }, 2000);
+      const valueInd = this.userAnswers[this.currentQuestion].userAnswer.indexOf(answer);
+      if (valueInd !== -1) this.userAnswers[this.currentQuestion].userAnswer.splice(valueInd, 1);
     }
   }
 
   changeQuestion() {
     this.currentQuestion++;
-    this.inputsDisabled = false;
     // Check if questions are over
-    if (this.currentQuestion === this.questions.length) {
+    if (this.currentQuestion === this.questionList.length) {
       this.showScore();
     }
   }
 
+  compareAnswers() {
+    for (let userQuestion of this.userAnswers) {
+      const questionId = userQuestion['id'];
+      const userAnswer = userQuestion['userAnswer'];
+      if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score++;
+      else if (userAnswer === this.questionList[questionId].answer) this.score++;
+    }
+  }
+
   showScore() {
+    this.compareAnswers();
+    this.quizResult = this.score.toString() + '/' + this.questionList.length.toString();
     this.showUserScore = true;
-    this.quizResult = this.score.toString() + '/' + this.questions.length.toString();
     setTimeout(() => {
-      this.quizResultPercent = this.score / this.questions.length * 100;
+      this.quizResultPercent = this.score / this.questionList.length * 100;
     }, 100);
   }
 }
