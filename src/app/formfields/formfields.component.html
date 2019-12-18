@@ -62,6 +62,7 @@
                          [required]="radioField.required">
           <mat-label [class.required-field]="radioField.required" [innerHTML]="radioField.title"></mat-label>
           <mat-radio-button *ngFor="let option of radioField.options"
+                            color="primary"
                             [value]="option.key">{{option.value}}</mat-radio-button>
         </mat-radio-group>
       </div>

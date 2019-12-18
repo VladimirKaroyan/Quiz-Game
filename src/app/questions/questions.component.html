@@ -2,12 +2,15 @@
   <div class="row questions-list" [hidden]="showUserScore">
     <div class="col-md-10 col-lg-8 col-sm-offset-2">
       <div *ngFor="let question of questionList; index as questionNum" [hidden]="questionNum !== currentQuestion">
+        <div class="question">
+          <h3>
+            <span class="badge badge-warning qid">{{questionNum + 1}}</span>
+            <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
+            <span
+              class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString().slice(-1) == '1' ? 'point' : 'points'}}</span>
+          </h3>
+        </div>
         <div class="questions-radio" *ngIf="question['type'] === 'radio'">
-          <div class="question">
-            <h3><span class="badge badge-warning qid">{{questionNum + 1}}</span>
-              <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
-            </h3>
-          </div>
           <mat-radio-group [name]="question['name']">
             <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index"
                  class="radio-button-group">
@@ -26,11 +29,6 @@
                   style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
         </div>
         <div class="questions-checkbox" *ngIf="question['type'] === 'checkbox'">
-          <div class="question">
-            <h3><span class="badge badge-warning qid">{{questionNum + 1}}</span>
-              <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
-            </h3>
-          </div>
           <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index" class="answers-box">
             <mat-checkbox
               id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
@@ -46,11 +44,6 @@
                   style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
         </div>
         <div class="questions-text" *ngIf="question['type'] === 'text'">
-          <div class="question">
-            <h3><span class="badge badge-warning qid">{{questionNum + 1}}</span>
-              <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
-            </h3>
-          </div>
           <div class="answer">
             <mat-form-field>
               <input matInput
@@ -71,7 +64,9 @@
   </div>
   <div class="row user-result" [hidden]="!showUserScore">
     <div class="col-md-12">
-      <h1 class="text-center">Your result {{quizResult}}</h1>
+      <h1 class="text-center">
+        You scored {{ score.toString() }} {{ score.toString().slice(-1) == '1' ? 'point' : 'points' }}
+      </h1>
       <div class="progress progress-striped active">
         <div class="progress-bar progress-bar-success" [ngStyle]="{'width.%': quizResultPercent}">
         </div>

@@ -14,8 +14,8 @@ export class QuestionsComponent implements OnInit {
   questionList;
   userAnswers = [];
   score: any = 0;
-  quizResult: string;
   quizResultPercent = 0;
+  totalPoints = 0;
 
   constructor(private appService: ApplicationService) {
   }
@@ -25,6 +25,7 @@ export class QuestionsComponent implements OnInit {
       questions => {
         this.questionList = questions;
         for (let i in questions) {
+          this.totalPoints += Number(questions[i]['point']);
           if (questions[i]['type'] === 'checkbox') {
             this.userAnswers.push({
               id: i,
@@ -79,17 +80,17 @@ export class QuestionsComponent implements OnInit {
     for (let userQuestion of this.userAnswers) {
       const questionId = userQuestion['id'];
       const userAnswer = userQuestion['userAnswer'];
-      if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score++;
-      else if (userAnswer === this.questionList[questionId].answer) this.score++;
+      if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score += Number(this.questionList[questionId]['point']);
+      else if (userAnswer === this.questionList[questionId].answer) this.score += Number(this.questionList[questionId]['point']);
     }
+    console.log(this.score);
   }
 
   showScore() {
     this.compareAnswers();
-    this.quizResult = this.score.toString() + '/' + this.questionList.length.toString();
     this.showUserScore = true;
     setTimeout(() => {
-      this.quizResultPercent = this.score / this.questionList.length * 100;
+      this.quizResultPercent = this.score / this.totalPoints * 100;
     }, 100);
   }
 }
