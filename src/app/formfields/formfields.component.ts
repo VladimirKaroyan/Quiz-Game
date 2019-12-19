@@ -3,6 +3,7 @@ import {MainComponent} from "../main/main.component";
 import {ApplicationService} from "../application.service";
 import {Router} from '@angular/router';
 import {Title} from "@angular/platform-browser";
+import {FormControl, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-formfields',
@@ -34,7 +35,7 @@ export class FormfieldsComponent implements OnInit {
     this.appService.getAppFields(this.appId, this.eventId).subscribe(
       formFields => {
         this.checkBoxes = [];
-        if (formFields['error']) {
+        if (formFields['error'] || !formFields['appFields'] || !formFields['appFields'].length) {
           this.mainComponent.showLoader = false;
           return this.router.navigate(['../error']);
         }

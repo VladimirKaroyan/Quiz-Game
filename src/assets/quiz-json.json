@@ -20,7 +20,7 @@
     "title": "Which picture shows a Tooo?",
     "name": "Tooo_pict",
     "type": "text",
-    "required": false,
+    "required": true,
     "point":  25,
     "answer": "first"
   },

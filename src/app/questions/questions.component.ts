@@ -83,7 +83,7 @@ export class QuestionsComponent implements OnInit {
       if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score += Number(this.questionList[questionId]['point']);
       else if (userAnswer === this.questionList[questionId].answer) this.score += Number(this.questionList[questionId]['point']);
     }
-    console.log(this.score);
+    // console.log(this.score);
   }
 
   showScore() {

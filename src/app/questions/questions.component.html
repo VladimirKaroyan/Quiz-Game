@@ -7,10 +7,10 @@
             <span class="badge badge-warning qid">{{questionNum + 1}}</span>
             <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
             <span
-              class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString().slice(-1) == '1' ? 'point' : 'points'}}</span>
+              class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString() == '1' ? 'point' : 'points'}}</span>
           </h3>
         </div>
-        <div class="questions-radio" *ngIf="question['type'] === 'radio'">
+        <div class="answers-block questions-radio" *ngIf="question['type'] === 'radio'">
           <mat-radio-group [name]="question['name']">
             <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index"
                  class="radio-button-group">
@@ -18,32 +18,24 @@
                 id="{{questionNum}}-{{answerNum}}"
                 value="{{answer.key}}"
                 (change)="selectAnswer($event.value)">
+                {{answer.value}}
               </mat-radio-button>
-              <mat-label [innerHTML]="answer.value"></mat-label>
+              <!--              <mat-label [innerHTML]="answer.value"></mat-label>-->
             </div>
           </mat-radio-group>
-          <button mat-raised-button
-                  [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'].length === 0"
-                  (click)="changeQuestion()"
-                  class="btn btn-primary pull-right"
-                  style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
         </div>
-        <div class="questions-checkbox" *ngIf="question['type'] === 'checkbox'">
+        <div class="answers-block questions-checkbox" *ngIf="question['type'] === 'checkbox'">
           <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index" class="answers-box">
             <mat-checkbox
               id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
               value="{{answer.key}}"
               (change)="selectCheckBoxAnswer(answer.key, $event.checked)">
+              {{answer.value}}
             </mat-checkbox>
-            <mat-label [innerHTML]="answer.value"></mat-label>
+            <!--            <mat-label [innerHTML]=""></mat-label>-->
           </div>
-          <button mat-raised-button
-                  (click)="changeQuestion()"
-                  [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].length === 0"
-                  class="btn btn-primary pull-right"
-                  style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
         </div>
-        <div class="questions-text" *ngIf="question['type'] === 'text'">
+        <div class="answers-block questions-text" *ngIf="question['type'] === 'text'">
           <div class="answer">
             <mat-form-field>
               <input matInput
@@ -51,21 +43,22 @@
                      type="text"
                      id="{{questionNum}}-value"
                      [name]="question['name']"
-                     (change)="selectAnswer($event.target['value'])">
+                     (keyup)="selectAnswer($event.target['value'])">
             </mat-form-field>
           </div>
-          <button mat-raised-button (click)="changeQuestion()"
-                  [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'].length === 0"
-                  class="btn btn-primary pull-right"
-                  style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
         </div>
+        <button mat-raised-button
+                (click)="changeQuestion()"
+                [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].length === 0"
+                class="btn btn-primary pull-right"
+                style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
       </div>
     </div>
   </div>
   <div class="row user-result" [hidden]="!showUserScore">
     <div class="col-md-12">
       <h1 class="text-center">
-        You scored {{ score.toString() }} {{ score.toString().slice(-1) == '1' ? 'point' : 'points' }}
+        You scored {{ score.toString() }} {{ score.toString() == '1' ? 'point' : 'points' }}
       </h1>
       <div class="progress progress-striped active">
         <div class="progress-bar progress-bar-success" [ngStyle]="{'width.%': quizResultPercent}">
