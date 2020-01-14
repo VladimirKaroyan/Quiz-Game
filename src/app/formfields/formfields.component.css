@@ -26,7 +26,7 @@ mat-label.error-class, mat-checkbox.ng-touched.ng-invalid, mat-radio-group.ng-to
 }
 
 .container {
-  padding: 0 !important;
+  padding: 10px 0 !important;
 }
 
 form > .col-md-12 {

@@ -92,5 +92,8 @@ export class QuestionsComponent implements OnInit {
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;
     }, 100);
+    setTimeout(() => {
+      location.reload();
+    }, 3000);
   }
 }

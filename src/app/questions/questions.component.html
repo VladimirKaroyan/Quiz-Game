@@ -4,7 +4,7 @@
       <div *ngFor="let question of questionList; index as questionNum" [hidden]="questionNum !== currentQuestion">
         <div class="question">
           <h3>
-            <span class="badge badge-warning qid">{{questionNum + 1}}</span>
+            <span class="badge badge-warning qid" style="background-color: transparent">{{questionNum + 1}}</span>
             <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
             <span
               class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString() == '1' ? 'point' : 'points'}}</span>
@@ -15,6 +15,7 @@
             <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index"
                  class="radio-button-group">
               <mat-radio-button
+                color="primary"
                 id="{{questionNum}}-{{answerNum}}"
                 value="{{answer.key}}"
                 (change)="selectAnswer($event.value)">
@@ -27,6 +28,7 @@
         <div class="answers-block questions-checkbox" *ngIf="question['type'] === 'checkbox'">
           <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index" class="answers-box">
             <mat-checkbox
+              color="primary"
               id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
               value="{{answer.key}}"
               (change)="selectCheckBoxAnswer(answer.key, $event.checked)">
@@ -59,6 +61,9 @@
     <div class="col-md-12">
       <h1 class="text-center">
         You scored {{ score.toString() }} {{ score.toString() == '1' ? 'point' : 'points' }}
+      </h1>
+      <h1 class="text-center">
+        Thank you for participating
       </h1>
       <div class="progress progress-striped active">
         <div class="progress-bar progress-bar-success" [ngStyle]="{'width.%': quizResultPercent}">
