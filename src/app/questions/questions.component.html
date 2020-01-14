@@ -4,8 +4,7 @@
       <div *ngFor="let question of questionList; index as questionNum" [hidden]="questionNum !== currentQuestion">
         <div class="question">
           <h3>
-            <span class="badge badge-warning qid" style="background-color: transparent">{{questionNum + 1}}</span>
-            <span [class.required-question]="question['required']" [innerHTML]="question['title']"></span>
+            <span [class.required-question]="question['required']" [innerHTML]="questionNum + 1 + '.' + question['title']"></span>
             <span
               class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString() == '1' ? 'point' : 'points'}}</span>
           </h3>
