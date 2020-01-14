@@ -11,3 +11,15 @@ app-questions {
     height: 2px !important;
   }
 }
+
+::ng-deep .mat-radio-button.mat-primary.mat-radio-checked .mat-radio-outer-circle {
+  border-color: #0069d9;
+}
+
+::ng-deep .mat-radio-button.mat-primary .mat-radio-inner-circle, .mat-radio-button.mat-primary .mat-radio-ripple .mat-ripple-element:not(.mat-radio-persistent-ripple), .mat-radio-button.mat-primary.mat-radio-checked .mat-radio-persistent-ripple, .mat-radio-button.mat-primary:active .mat-radio-persistent-ripple,
+::ng-deep .mat-checkbox-checked.mat-primary .mat-checkbox-background,
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+::ng-deep .mat-raised-button.mat-primary,
+::ng-deep .btn-primary {
+  background-color: #0069d9;
+}

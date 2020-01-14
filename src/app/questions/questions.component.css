@@ -1,8 +1,9 @@
 
 .question {
-  background: #ff8d00;
+  background: white;
   padding: 20px 10px;
-  color: #fff;
+  color: black;
+  border: 2px solid black;
 }
 
 div.answer mat-form-field {
@@ -17,7 +18,16 @@ div.answer mat-form-field {
 .qid {
   margin-right: 7px;
   background-color: #ffffff;
-  color: #aaaaaa;
+  color: black;
+}
+
+.badge-warning {
+  background-color: lightgrey;
+}
+
+.questions-list .mat-form-field-appearance-legacy .mat-form-field-underline,
+::ng-deep .questions-list .mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: black;
 }
 
 .container ul {
