@@ -1,7 +1,7 @@
 const localHostName = 'dell.eyeframe.test';
 const localProtocol = 'http:';
 const hostname = window.location.hostname;
-const protocol = window.location.hostname;
+const protocol = window.location.protocol;
 const getHostName = () => {
   return (window.location.hostname === 'localhost') ? localHostName : hostname;
 };

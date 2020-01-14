@@ -5,3 +5,9 @@ app-questions {
   padding: 0;
   margin: 0;
 }
+
+@media (min-width: 1920px) {
+  ::ng-deep .mat-form-field-underline, ::ng-deep .mat-form-field-appearance-legacy.mat-form-field-invalid:not(.mat-focused) .mat-form-field-ripple {
+    height: 2px !important;
+  }
+}
