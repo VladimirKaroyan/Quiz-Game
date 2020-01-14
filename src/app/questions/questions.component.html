@@ -52,7 +52,7 @@
                 (click)="changeQuestion()"
                 [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].length === 0"
                 class="btn btn-primary pull-right"
-                style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'See Results' : 'Next' }}</button>
+                style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'Submit Quiz' : 'Next' }}</button>
       </div>
     </div>
   </div>
