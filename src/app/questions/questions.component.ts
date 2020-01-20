@@ -107,6 +107,7 @@ export class QuestionsComponent implements OnInit {
   showScore() {
     // this.compareAnswers();
     this.getScore();
+    // this.compareAnswers();
     this.showUserScore = true;
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;

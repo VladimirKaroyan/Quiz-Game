@@ -224,8 +224,39 @@ span.required-question:after {
   font-size: xx-large
 }
 
+.modal.show-answer-block {
+  position: absolute;
+  top: 45px;
+  display: block;
+  padding: 5px;
+}
+
+.modal.show-answer-block.hidden {
+  display: none;
+}
+
+.show-answer-block.correct-answer {
+  color: green !important;
+}
+
+.show-answer-block.correct-answer .modal-content {
+  border-color: green;
+}
+
+.show-answer-block.incorrect-answer {
+  color: red !important;
+}
+
+.show-answer-block.incorrect-answer .modal-content {
+  border-color: red;
+}
+
 @media (max-width: 962px) {
   .question h3 {
     font-size: 17px;
+  }
+
+  .modal.show-answer-block {
+    top: 80px;
   }
 }
