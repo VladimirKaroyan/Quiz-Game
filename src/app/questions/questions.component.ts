@@ -12,6 +12,9 @@ export class QuestionsComponent implements OnInit {
   currentQuestion = 0;
   inputsDisabled = false;
   questionList;
+  curQuestionResult;
+  curQuestionMessage;
+  showAnswerModal = false;
   userAnswers = [];
   score: any = 0;
   quizResultPercent = 0;
@@ -69,25 +72,41 @@ export class QuestionsComponent implements OnInit {
   }
 
   changeQuestion() {
-    this.currentQuestion++;
-    // Check if questions are over
-    if (this.currentQuestion === this.questionList.length) {
-      this.showScore();
-    }
+    let that = this;
+    this.curQuestionResult = (this.compareAnswer(this.currentQuestion) ? 'Correct' : 'Incorrect');
+    this.curQuestionMessage = (this.compareAnswer(this.currentQuestion) ? 'Your answer is correct' : this.questionList[this.currentQuestion]['incorrect_message']);
+    this.showAnswerModal = true;
+    setTimeout(() => {
+      that.currentQuestion++;
+      this.showAnswerModal = false;
+      this.curQuestionResult = '';
+      this.curQuestionMessage = '';
+      // Check if questions are over
+      if (that.currentQuestion === that.questionList.length) {
+        that.showScore();
+      }
+    }, 3000);
   }
 
-  compareAnswers() {
+  compareAnswer(curQuestionId) {
+    let userQuestion = this.userAnswers[curQuestionId];
+    const questionId = userQuestion['id'];
+    const userAnswer = userQuestion['userAnswer'];
+    return (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) || (userAnswer === this.questionList[questionId].answer);
+  }
+
+  getScore() {
     for (let userQuestion of this.userAnswers) {
       const questionId = userQuestion['id'];
       const userAnswer = userQuestion['userAnswer'];
       if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score += Number(this.questionList[questionId]['point']);
       else if (userAnswer === this.questionList[questionId].answer) this.score += Number(this.questionList[questionId]['point']);
     }
-    // console.log(this.score);
   }
 
   showScore() {
-    this.compareAnswers();
+    // this.compareAnswers();
+    this.getScore();
     this.showUserScore = true;
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;
