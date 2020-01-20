@@ -81,27 +81,32 @@ export class QuestionsComponent implements OnInit {
       this.showAnswerModal = false;
       this.curQuestionResult = '';
       this.curQuestionMessage = '';
+      // Check if questions are over
+      if (that.currentQuestion === that.questionList.length) {
+        that.showScore();
+      }
     }, 3000);
-    // Check if questions are over
-    if (this.currentQuestion === this.questionList.length) {
-      this.showScore();
-    }
   }
 
   compareAnswer(curQuestionId) {
     let userQuestion = this.userAnswers[curQuestionId];
-    // for (let userQuestion of this.userAnswers) {
     const questionId = userQuestion['id'];
     const userAnswer = userQuestion['userAnswer'];
     return (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) || (userAnswer === this.questionList[questionId].answer);
-    // if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score += Number(this.questionList[questionId]['point']);
-    // else if (userAnswer === this.questionList[questionId].answer) this.score += Number(this.questionList[questionId]['point']);
-    // }
-    // console.log(this.score);
+  }
+
+  getScore() {
+    for (let userQuestion of this.userAnswers) {
+      const questionId = userQuestion['id'];
+      const userAnswer = userQuestion['userAnswer'];
+      if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score += Number(this.questionList[questionId]['point']);
+      else if (userAnswer === this.questionList[questionId].answer) this.score += Number(this.questionList[questionId]['point']);
+    }
   }
 
   showScore() {
     // this.compareAnswers();
+    this.getScore();
     this.showUserScore = true;
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;
