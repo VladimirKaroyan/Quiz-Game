@@ -4,7 +4,8 @@
       <div *ngFor="let question of questionList; index as questionNum" [hidden]="questionNum !== currentQuestion">
         <div class="question">
           <h3>
-            <span [class.required-question]="question['required']" [innerHTML]="questionNum + 1 + '.' + question['title']"></span>
+            <span [class.required-question]="question['required']"
+                  [innerHTML]="questionNum + 1 + '.' + question['title']"></span>
             <span
               class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString() == '1' ? 'point' : 'points'}}</span>
           </h3>
@@ -46,6 +47,22 @@
                      [name]="question['name']"
                      (keyup)="selectAnswer($event.target['value'])">
             </mat-form-field>
+          </div>
+        </div>
+        <div class="modal show-answer-block"
+             [class.hidden]="!showAnswerModal"
+             [class.correct-answer]="curQuestionResult === 'Correct'"
+             [class.incorrect-answer]="curQuestionResult === 'Incorrect'"
+             tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">{{curQuestionResult}}</h5>
+              </div>
+              <div class="modal-body">
+                <p>{{curQuestionMessage}}</p>
+              </div>
+            </div>
           </div>
         </div>
         <button mat-raised-button
