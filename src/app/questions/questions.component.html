@@ -12,13 +12,13 @@
         </div>
         <div class="answers-block questions-radio" *ngIf="question['type'] === 'radio'">
           <mat-radio-group [name]="question['name']">
-            <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index"
+            <div *ngFor="let answer of question['answers']; let answerNum = index"
                  class="radio-button-group">
               <mat-radio-button
                 color="primary"
                 id="{{questionNum}}-{{answerNum}}"
-                value="{{answer.key}}"
-                (change)="selectAnswer($event.value)">
+                value="{{answer['key']}}"
+                (change)="selectAnswer(answerNum)">
                 {{answer.value}}
               </mat-radio-button>
               <!--              <mat-label [innerHTML]="answer.value"></mat-label>-->
@@ -26,13 +26,13 @@
           </mat-radio-group>
         </div>
         <div class="answers-block questions-checkbox" *ngIf="question['type'] === 'checkbox'">
-          <div *ngFor="let answer of question['answers'] | keyvalue; let answerNum = index" class="answers-box">
+          <div *ngFor="let answer of question['answers']; let answerNum = index" class="answers-box">
             <mat-checkbox
               color="primary"
               id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
               value="{{answer.key}}"
-              (change)="selectCheckBoxAnswer(answer.key, $event.checked)">
-              {{answer.value}}
+              (change)="selectCheckBoxAnswer(answerNum, $event.checked)">
+              {{answer['value']}}
             </mat-checkbox>
             <!--            <mat-label [innerHTML]=""></mat-label>-->
           </div>
@@ -67,7 +67,7 @@
         </div>
         <button mat-raised-button
                 (click)="changeQuestion()"
-                [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].length === 0"
+                [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].toString().trim().length === 0"
                 class="btn btn-primary pull-right"
                 style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'Submit Quiz' : 'Next' }}</button>
       </div>
@@ -76,7 +76,7 @@
   <div class="row user-result" [hidden]="!showUserScore">
     <div class="col-md-12">
       <h1 class="text-center">
-        You scored {{ score.toString() }} {{ score.toString() == '1' ? 'point' : 'points' }}
+        Your score: {{ score.toString() }} {{ score.toString() == '1' ? 'point' : 'points' }}
       </h1>
       <h1 class="text-center">
         Thank you for participating
