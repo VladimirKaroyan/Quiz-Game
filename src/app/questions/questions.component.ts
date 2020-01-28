@@ -49,13 +49,12 @@ export class QuestionsComponent implements OnInit {
       });
   }
 
-  compareArrays(arr1, arr2) {
-    if (arr1.length != arr2.length) {
-      return false;
+  compareArrays(questionId, answersArray) {
+    for (let i in answersArray) {
+      let answerId = answersArray[i];
+      if (!this.questionList[questionId]['answers'][answerId]['right']) return false;
     }
-    let a1 = arr1.map(e => JSON.stringify(e)).sort();
-    let a2 = arr2.map(e => JSON.stringify(e)).sort();
-    return !a1.map((e, i) => e == a2[i]).includes(false);
+    return true;
   }
 
   selectAnswer(answer) {
@@ -74,7 +73,8 @@ export class QuestionsComponent implements OnInit {
   changeQuestion() {
     let that = this;
     this.curQuestionResult = (this.compareAnswer(this.currentQuestion) ? 'Correct' : 'Incorrect');
-    this.curQuestionMessage = (this.compareAnswer(this.currentQuestion) ? 'Your answer is correct' : this.questionList[this.currentQuestion]['incorrect_message']);
+    if (this.userAnswers[this.currentQuestion]['userAnswer'].toString().trim().length === 0) this.curQuestionMessage = 'You missed the answer';
+    else this.curQuestionMessage = (this.compareAnswer(this.currentQuestion) ? 'Your answer is correct' : this.questionList[this.currentQuestion]['incorrect_message']);
     this.showAnswerModal = true;
     setTimeout(() => {
       that.currentQuestion++;
@@ -92,22 +92,21 @@ export class QuestionsComponent implements OnInit {
     let userQuestion = this.userAnswers[curQuestionId];
     const questionId = userQuestion['id'];
     const userAnswer = userQuestion['userAnswer'];
-    return (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) || (userAnswer === this.questionList[questionId].answer);
+    if (userQuestion['userAnswer'] === '') return false;
+    if (this.questionList[curQuestionId]['type'] === 'text') return (this.questionList[curQuestionId]['answer'] && userAnswer === this.questionList[curQuestionId]['answer']);
+    return (Array.isArray(userAnswer) && this.compareArrays(questionId, userAnswer)) || (!Array.isArray(userAnswer) && this.questionList[questionId]['answers'][userAnswer]['right']);
   }
 
   getScore() {
     for (let userQuestion of this.userAnswers) {
       const questionId = userQuestion['id'];
-      const userAnswer = userQuestion['userAnswer'];
-      if (Array.isArray(userAnswer) && this.compareArrays(userAnswer, this.questionList[questionId].answer)) this.score += Number(this.questionList[questionId]['point']);
-      else if (userAnswer === this.questionList[questionId].answer) this.score += Number(this.questionList[questionId]['point']);
+      if (this.compareAnswer(questionId)) this.score += Number(this.questionList[questionId]['point']);
     }
   }
 
   showScore() {
     // this.compareAnswers();
     this.getScore();
-    // this.compareAnswers();
     this.showUserScore = true;
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;
