@@ -14,6 +14,8 @@ export class FormfieldsComponent implements OnInit {
   appId;
   eventId;
   states;
+  countries;
+  countryDefault;
   fields = {
     select: [],
     text: [],
@@ -22,6 +24,7 @@ export class FormfieldsComponent implements OnInit {
     multi: [],
     checkbox: [],
     stateInput: [],
+    countryInput: []
   };
   checkBoxes;
   form;
@@ -40,9 +43,13 @@ export class FormfieldsComponent implements OnInit {
           return this.router.navigate(['../error']);
         }
         if (formFields['states']) this.states = formFields['states'];
+        if (formFields['countries']) this.countries = formFields['countries'];
+        if (formFields['countryDefault']) this.countryDefault = formFields['countryDefault'];
         if (formFields['appFields'] && formFields['appFields'].length) {
           formFields['appFields'].forEach(one => {
-            const type = (one.type === 'select' && one.name === 'state') ? 'stateInput' : one.type;
+            let type = one.type;
+            if (one.type === 'select' && one.name === 'state') type = "stateInput";
+            else if (one.type === 'select' && one.name === 'country') type = "countryInput";
             if (one.selected) {
               if (this.fields[one.type] !== undefined) {
                 this.fields[type].push(one);
@@ -98,7 +105,7 @@ export class FormfieldsComponent implements OnInit {
     if (index === -1) {
       this.checkBoxes.push({
         name: inputName,
-        value: [inputValue]
+        value: (isChecked) ? [inputValue] : []
       });
     } else if (index !== -1 && isChecked) {
       this.checkBoxes[index].value.push(inputValue);

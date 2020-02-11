@@ -33,13 +33,17 @@ export class QuestionsComponent implements OnInit {
             this.userAnswers.push({
               id: i,
               question: questions[i].name,
-              userAnswer: []
+              userAnswer: [],
+              points: questions[i]['point'],
+              correct: false
             });
           } else {
             this.userAnswers.push({
               id: i,
               question: questions[i].name,
-              userAnswer: ''
+              userAnswer: '',
+              points: questions[i]['point'],
+              correct: false
             });
           }
         }
@@ -49,9 +53,15 @@ export class QuestionsComponent implements OnInit {
       });
   }
 
+  findOnJson(data, value) {
+    return data.findIndex((item) => {
+      return item.key === value;
+    });
+  }
+
   compareArrays(questionId, answersArray) {
     for (let i in answersArray) {
-      let answerId = answersArray[i];
+      let answerId = this.findOnJson(this.questionList[questionId]['answers'], answersArray[i]);
       if (!this.questionList[questionId]['answers'][answerId]['right']) return false;
     }
     return true;
@@ -73,8 +83,13 @@ export class QuestionsComponent implements OnInit {
   changeQuestion() {
     let that = this;
     this.curQuestionResult = (this.compareAnswer(this.currentQuestion) ? 'Correct' : 'Incorrect');
-    if (this.userAnswers[this.currentQuestion]['userAnswer'].toString().trim().length === 0) this.curQuestionMessage = 'You missed the answer';
-    else this.curQuestionMessage = (this.compareAnswer(this.currentQuestion) ? 'Your answer is correct' : this.questionList[this.currentQuestion]['incorrect_message']);
+    if (this.userAnswers[this.currentQuestion]['userAnswer'].toString().trim().length === 0) {
+      this.curQuestionMessage = 'You missed the answer';
+      this.userAnswers[this.currentQuestion]['correct'] = 'skipped';
+    } else {
+      this.curQuestionMessage = (this.compareAnswer(this.currentQuestion)) ? 'Your answer is correct' : this.questionList[this.currentQuestion]['incorrect_message'];
+      this.userAnswers[this.currentQuestion]['correct'] = this.compareAnswer(this.currentQuestion);
+    }
     this.showAnswerModal = true;
     setTimeout(() => {
       that.currentQuestion++;
@@ -93,8 +108,14 @@ export class QuestionsComponent implements OnInit {
     const questionId = userQuestion['id'];
     const userAnswer = userQuestion['userAnswer'];
     if (userQuestion['userAnswer'] === '') return false;
-    if (this.questionList[curQuestionId]['type'] === 'text') return (this.questionList[curQuestionId]['answer'] && userAnswer === this.questionList[curQuestionId]['answer']);
-    return (Array.isArray(userAnswer) && this.compareArrays(questionId, userAnswer)) || (!Array.isArray(userAnswer) && this.questionList[questionId]['answers'][userAnswer]['right']);
+    if (this.questionList[curQuestionId]['type'] === 'text') {
+      return (this.questionList[curQuestionId]['answer'] && userAnswer === this.questionList[curQuestionId]['answer']);
+    } else if (this.questionList[curQuestionId]['type'] === 'checkbox') {
+      return Array.isArray(userAnswer) && this.compareArrays(questionId, userAnswer);
+    } else {
+      let answerId = this.findOnJson(this.questionList[questionId]['answers'], userAnswer);
+      return !Array.isArray(userAnswer) && this.questionList[questionId]['answers'][answerId]['right'];
+    }
   }
 
   getScore() {

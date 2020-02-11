@@ -18,7 +18,7 @@
                 color="primary"
                 id="{{questionNum}}-{{answerNum}}"
                 value="{{answer['key']}}"
-                (change)="selectAnswer(answerNum)">
+                (change)="selectAnswer(answer['key'])">
                 {{answer.value}}
               </mat-radio-button>
               <!--              <mat-label [innerHTML]="answer.value"></mat-label>-->
@@ -31,7 +31,7 @@
               color="primary"
               id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
               value="{{answer.key}}"
-              (change)="selectCheckBoxAnswer(answerNum, $event.checked)">
+              (change)="selectCheckBoxAnswer(answer.key, $event.checked)">
               {{answer['value']}}
             </mat-checkbox>
             <!--            <mat-label [innerHTML]=""></mat-label>-->
