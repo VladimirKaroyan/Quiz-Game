@@ -43,6 +43,7 @@ export class ApplicationService {
   postAppData(answers) {
     this.sendData['appId'] = this.appId;
     this.sendData['eventId'] = this.eventId;
+    this.sendData['token'] = this.companyToken;
     this.sendData['answers'] = answers;
     return this.http.post(this.postDataURL, this.sendData, this.requestOptions).subscribe(
       res => {
