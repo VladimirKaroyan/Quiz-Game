@@ -33,9 +33,10 @@ export class FormfieldsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.eventId = this.getURLParam('eventId');
-    this.appId = this.getURLParam('appId');
-    this.appService.getAppFields(this.appId, this.eventId).subscribe(
+    this.appService.appId = this.getURLParam('appId');
+    this.appService.eventId = this.getURLParam('eventId');
+    this.appService.companyToken = this.getURLParam('token');
+    this.appService.getAppFields().subscribe(
       formFields => {
         this.checkBoxes = [];
         if (formFields['error'] || !formFields['appFields'] || !formFields['appFields'].length) {
@@ -96,6 +97,7 @@ export class FormfieldsComponent implements OnInit {
         }
       });
       if (this.checkBoxes && this.checkBoxes.length) this.form = this.form.concat(this.checkBoxes);
+      this.appService.sendData['formFields'] = this.form;
       this.mainComponent.isCompletedFields = true;
     }
   }

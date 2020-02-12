@@ -27,6 +27,8 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 export class MainComponent implements OnInit {
   showLoader = true;
   isCompletedFields = false;
+  background_color;
+  background_image;
 
   constructor() {
   }

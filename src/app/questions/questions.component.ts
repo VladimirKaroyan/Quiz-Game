@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ApplicationService} from "../application.service";
+import {MainComponent} from "../main/main.component";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-questions',
@@ -8,6 +10,7 @@ import {ApplicationService} from "../application.service";
 })
 
 export class QuestionsComponent implements OnInit {
+  next_button_color = '#0069d9';
   showUserScore = false;
   currentQuestion = 0;
   inputsDisabled = false;
@@ -20,36 +23,31 @@ export class QuestionsComponent implements OnInit {
   quizResultPercent = 0;
   totalPoints = 0;
 
-  constructor(private appService: ApplicationService) {
+  constructor(private appService: ApplicationService, private mainComp: MainComponent, private router: Router) {
   }
 
   ngOnInit() {
-    this.appService.getQuestions().subscribe(
-      questions => {
-        this.questionList = questions;
-        for (let i in questions) {
-          this.totalPoints += Number(questions[i]['point']);
-          if (questions[i]['type'] === 'checkbox') {
-            this.userAnswers.push({
-              id: i,
-              question: questions[i].name,
-              userAnswer: [],
-              points: questions[i]['point'],
-              correct: false
-            });
-          } else {
-            this.userAnswers.push({
-              id: i,
-              question: questions[i].name,
-              userAnswer: '',
-              points: questions[i]['point'],
-              correct: false
-            });
-          }
+    this.appService.getGameInfo().subscribe(
+      gameData => {
+        this.questionList = gameData['questions'];
+        this.next_button_color = "#" + gameData['next_button_color'];
+        this.mainComp.background_color = "#" + gameData['background_color'];
+        this.mainComp.background_image = "url(" + gameData['background_image'] + ")";
+        for (let i in this.questionList) {
+          this.totalPoints += Number(this.questionList[i]['point']);
+          this.userAnswers.push({
+            id: i,
+            question: this.questionList[i].name,
+            userAnswer: [],
+            points: this.questionList[i]['point'],
+            correct: false
+          });
         }
       },
       (err) => {
         console.warn(err);
+        this.mainComp.showLoader = false;
+        return this.router.navigate(['../error']);
       });
   }
 
@@ -60,15 +58,19 @@ export class QuestionsComponent implements OnInit {
   }
 
   compareArrays(questionId, answersArray) {
+    let rightAnswersCount = this.questionList[questionId]['options'].filter((i) => {
+      return i.right === true
+    }).length;
+    if (rightAnswersCount !== answersArray.length) return false;
     for (let i in answersArray) {
-      let answerId = this.findOnJson(this.questionList[questionId]['answers'], answersArray[i]);
-      if (!this.questionList[questionId]['answers'][answerId]['right']) return false;
+      let answerId = this.findOnJson(this.questionList[questionId]['options'], answersArray[i]);
+      if (!this.questionList[questionId]['options'][answerId]['right']) return false;
     }
     return true;
   }
 
   selectAnswer(answer) {
-    this.userAnswers[this.currentQuestion].userAnswer = answer;
+    this.userAnswers[this.currentQuestion].userAnswer = [answer];
   }
 
   selectCheckBoxAnswer(answer, isChecked) {
@@ -82,13 +84,14 @@ export class QuestionsComponent implements OnInit {
 
   changeQuestion() {
     let that = this;
-    this.curQuestionResult = (this.compareAnswer(this.currentQuestion) ? 'Correct' : 'Incorrect');
-    if (this.userAnswers[this.currentQuestion]['userAnswer'].toString().trim().length === 0) {
+    if (!this.userAnswers[this.currentQuestion]['userAnswer'][0] || this.userAnswers[this.currentQuestion]['userAnswer'][0].toString().trim().length === 0) {
       this.curQuestionMessage = 'You missed the answer';
       this.userAnswers[this.currentQuestion]['correct'] = 'skipped';
+      this.curQuestionResult = 'Skipped';
     } else {
       this.curQuestionMessage = (this.compareAnswer(this.currentQuestion)) ? 'Your answer is correct' : this.questionList[this.currentQuestion]['incorrect_message'];
-      this.userAnswers[this.currentQuestion]['correct'] = this.compareAnswer(this.currentQuestion);
+      this.userAnswers[this.currentQuestion]['correct'] = this.compareAnswer(this.currentQuestion) ? 'right' : 'wrong';
+      this.curQuestionResult = (this.compareAnswer(this.currentQuestion) ? 'Correct' : 'Incorrect');
     }
     this.showAnswerModal = true;
     setTimeout(() => {
@@ -107,14 +110,14 @@ export class QuestionsComponent implements OnInit {
     let userQuestion = this.userAnswers[curQuestionId];
     const questionId = userQuestion['id'];
     const userAnswer = userQuestion['userAnswer'];
-    if (userQuestion['userAnswer'] === '') return false;
+    if (userQuestion['userAnswer'][0] === '') return false;
     if (this.questionList[curQuestionId]['type'] === 'text') {
-      return (this.questionList[curQuestionId]['answer'] && userAnswer === this.questionList[curQuestionId]['answer']);
+      return (this.questionList[curQuestionId]['answer'] && userAnswer[0] === this.questionList[curQuestionId]['answer']);
     } else if (this.questionList[curQuestionId]['type'] === 'checkbox') {
-      return Array.isArray(userAnswer) && this.compareArrays(questionId, userAnswer);
+      return this.compareArrays(questionId, userAnswer);
     } else {
-      let answerId = this.findOnJson(this.questionList[questionId]['answers'], userAnswer);
-      return !Array.isArray(userAnswer) && this.questionList[questionId]['answers'][answerId]['right'];
+      let answerId = this.findOnJson(this.questionList[questionId]['options'], userAnswer[0]);
+      return answerId !== -1 && this.questionList[questionId]['options'][answerId]['right'];
     }
   }
 
@@ -129,11 +132,12 @@ export class QuestionsComponent implements OnInit {
     // this.compareAnswers();
     this.getScore();
     this.showUserScore = true;
+    this.appService.postAppData(this.userAnswers);
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;
     }, 100);
     setTimeout(() => {
-      location.reload();
+      // location.reload();
     }, 3000);
   }
 }

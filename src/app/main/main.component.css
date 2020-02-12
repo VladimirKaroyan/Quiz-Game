@@ -4,6 +4,8 @@ app-questions {
   justify-content: center;
   padding: 0;
   margin: 0;
+  background-position: center center;
+  background-size: cover;
 }
 
 @media (min-width: 1920px) {
@@ -22,4 +24,8 @@ app-questions {
 ::ng-deep .mat-raised-button.mat-primary,
 ::ng-deep .btn-primary {
   background-color: #0069d9;
+}
+
+.mat-fab.mat-accent[disabled], .mat-fab.mat-primary[disabled], .mat-fab.mat-warn[disabled], .mat-fab[disabled][disabled], .mat-flat-button.mat-accent[disabled], .mat-flat-button.mat-primary[disabled], .mat-flat-button.mat-warn[disabled], .mat-flat-button[disabled][disabled], .mat-mini-fab.mat-accent[disabled], .mat-mini-fab.mat-primary[disabled], .mat-mini-fab.mat-warn[disabled], .mat-mini-fab[disabled][disabled], .mat-raised-button.mat-accent[disabled], .mat-raised-button.mat-primary[disabled], .mat-raised-button.mat-warn[disabled], .mat-raised-button[disabled][disabled] {
+  background-color: rgba(0,0,0,.12) !important;
 }

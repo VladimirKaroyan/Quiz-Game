@@ -12,7 +12,7 @@
         </div>
         <div class="answers-block questions-radio" *ngIf="question['type'] === 'radio'">
           <mat-radio-group [name]="question['name']">
-            <div *ngFor="let answer of question['answers']; let answerNum = index"
+            <div *ngFor="let answer of question['options']; let answerNum = index"
                  class="radio-button-group">
               <mat-radio-button
                 color="primary"
@@ -26,7 +26,7 @@
           </mat-radio-group>
         </div>
         <div class="answers-block questions-checkbox" *ngIf="question['type'] === 'checkbox'">
-          <div *ngFor="let answer of question['answers']; let answerNum = index" class="answers-box">
+          <div *ngFor="let answer of question['options']; let answerNum = index" class="answers-box">
             <mat-checkbox
               color="primary"
               id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
@@ -59,7 +59,7 @@
               <div class="modal-header">
                 <h5 class="modal-title">{{curQuestionResult}}</h5>
               </div>
-              <div class="modal-body">
+              <div class="modal-body pb-0">
                 <p>{{curQuestionMessage}}</p>
               </div>
             </div>
@@ -68,8 +68,8 @@
         <button mat-raised-button
                 (click)="changeQuestion()"
                 [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].toString().trim().length === 0"
-                class="btn btn-primary pull-right"
-                style="margin: 20px 0;">{{ (questionNum === questionList.length - 1) ? 'Submit Quiz' : 'Next' }}</button>
+                [ngStyle]="{'background-color': next_button_color}"
+                class="btn btn-primary pull-right">{{ (questionNum === questionList.length - 1) ? 'Submit Quiz' : 'Next' }}</button>
       </div>
     </div>
   </div>
