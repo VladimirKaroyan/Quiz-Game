@@ -40,6 +40,7 @@ export class QuestionsComponent implements OnInit {
             question: this.questionList[i].name,
             userAnswer: [],
             points: this.questionList[i]['point'],
+            isRequired: this.questionList[i].required,
             correct: false
           });
         }
@@ -132,12 +133,17 @@ export class QuestionsComponent implements OnInit {
     // this.compareAnswers();
     this.getScore();
     this.showUserScore = true;
-    this.appService.postAppData(this.userAnswers);
+    this.appService.postAppData(this.userAnswers).subscribe(
+      (result) => {
+      },
+      (err) => {
+        console.warn(err)
+      });
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;
     }, 100);
     setTimeout(() => {
-      // location.reload();
+      location.reload();
     }, 3000);
   }
 }

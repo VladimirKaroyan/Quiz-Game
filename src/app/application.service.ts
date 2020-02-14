@@ -12,7 +12,7 @@ export class ApplicationService {
   hostname = globals.getHostName();
   protocol = globals.getProtocol() + '//';
   getAppFieldsURL: string = this.protocol + this.hostname + '/get-app-fields/';
-  getAppDataURL: string = this.protocol + this.hostname + '/api/v2/quizgame/info/';
+  getAppDataURL: string = this.protocol + this.hostname + '/api/v2/quizgame/info';
   postDataURL: string = this.protocol + this.hostname + '/api/v2/quizgame/answer';
 
   requestOptions = {
@@ -45,9 +45,6 @@ export class ApplicationService {
     this.sendData['eventId'] = this.eventId;
     this.sendData['token'] = this.companyToken;
     this.sendData['answers'] = answers;
-    return this.http.post(this.postDataURL, this.sendData, this.requestOptions).subscribe(
-      res => {
-        return res;
-      });
+    return this.http.post(this.postDataURL, this.sendData, this.requestOptions);
   }
 }
