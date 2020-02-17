@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ApplicationService} from "../application.service";
 import {MainComponent} from "../main/main.component";
 import {Router} from '@angular/router';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-questions',
@@ -23,7 +24,7 @@ export class QuestionsComponent implements OnInit {
   quizResultPercent = 0;
   totalPoints = 0;
 
-  constructor(private appService: ApplicationService, private mainComp: MainComponent, private router: Router) {
+  constructor(private appService: ApplicationService, private mainComp: MainComponent, private router: Router, private _snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -125,7 +126,7 @@ export class QuestionsComponent implements OnInit {
   getScore() {
     for (let userQuestion of this.userAnswers) {
       const questionId = userQuestion['id'];
-      if (this.compareAnswer(questionId)) this.score += Number(this.questionList[questionId]['point']);
+      if (this.compareAnswer(questionId) && userQuestion['correct'] !== 'skipped') this.score += Number(this.questionList[questionId]['point']);
     }
   }
 
@@ -135,15 +136,22 @@ export class QuestionsComponent implements OnInit {
     this.showUserScore = true;
     this.appService.postAppData(this.userAnswers).subscribe(
       (result) => {
+        if (result['code'] == 200) {
+          this._snackBar.open(result['message'], "Close", {
+            duration: 4000,
+          });
+        }
+        setTimeout("location.reload()", 3000);
       },
       (err) => {
+        this._snackBar.open("Error " + err.status + ": " + err.statusText, `Close`, {
+          duration: 4000,
+        });
+        setTimeout("location.reload()", 3000);
         console.warn(err)
       });
     setTimeout(() => {
       this.quizResultPercent = this.score / this.totalPoints * 100;
     }, 100);
-    setTimeout(() => {
-      location.reload();
-    }, 3000);
   }
 }
