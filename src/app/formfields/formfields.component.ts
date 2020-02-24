@@ -41,7 +41,7 @@ export class FormfieldsComponent implements OnInit {
         this.checkBoxes = [];
         if (formFields['error'] || !formFields['appFields'] || !formFields['appFields'].length) {
           this.mainComponent.showLoader = false;
-          return this.router.navigate(['../error']);
+          return this.router.navigate(['/error']);
         }
         if (formFields['states']) this.states = formFields['states'];
         if (formFields['countries']) this.countries = formFields['countries'];

@@ -49,7 +49,7 @@ export class QuestionsComponent implements OnInit {
       (err) => {
         console.warn(err);
         this.mainComp.showLoader = false;
-        return this.router.navigate(['../error']);
+        return this.router.navigate(['/error']);
       });
   }
 
