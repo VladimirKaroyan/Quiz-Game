@@ -14,6 +14,8 @@ export class FormfieldsComponent implements OnInit {
   appId;
   eventId;
   states;
+  countries;
+  countryDefault;
   fields = {
     select: [],
     text: [],
@@ -22,6 +24,7 @@ export class FormfieldsComponent implements OnInit {
     multi: [],
     checkbox: [],
     stateInput: [],
+    countryInput: []
   };
   checkBoxes;
   form;
@@ -30,19 +33,24 @@ export class FormfieldsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.eventId = this.getURLParam('eventId');
-    this.appId = this.getURLParam('appId');
-    this.appService.getAppFields(this.appId, this.eventId).subscribe(
+    this.appService.appId = this.getURLParam('appId');
+    this.appService.eventId = this.getURLParam('eventId');
+    this.appService.companyToken = this.getURLParam('token');
+    this.appService.getAppFields().subscribe(
       formFields => {
         this.checkBoxes = [];
         if (formFields['error'] || !formFields['appFields'] || !formFields['appFields'].length) {
           this.mainComponent.showLoader = false;
-          return this.router.navigate(['../error']);
+          return this.router.navigate(['/error']);
         }
         if (formFields['states']) this.states = formFields['states'];
+        if (formFields['countries']) this.countries = formFields['countries'];
+        if (formFields['countryDefault']) this.countryDefault = formFields['countryDefault'];
         if (formFields['appFields'] && formFields['appFields'].length) {
           formFields['appFields'].forEach(one => {
-            const type = (one.type === 'select' && one.name === 'state') ? 'stateInput' : one.type;
+            let type = one.type;
+            if (one.type === 'select' && one.name === 'state') type = "stateInput";
+            else if (one.type === 'select' && one.name === 'country') type = "countryInput";
             if (one.selected) {
               if (this.fields[one.type] !== undefined) {
                 this.fields[type].push(one);
@@ -89,6 +97,7 @@ export class FormfieldsComponent implements OnInit {
         }
       });
       if (this.checkBoxes && this.checkBoxes.length) this.form = this.form.concat(this.checkBoxes);
+      this.appService.sendData['formFields'] = this.form;
       this.mainComponent.isCompletedFields = true;
     }
   }
@@ -98,7 +107,7 @@ export class FormfieldsComponent implements OnInit {
     if (index === -1) {
       this.checkBoxes.push({
         name: inputName,
-        value: [inputValue]
+        value: (isChecked) ? [inputValue] : []
       });
     } else if (index !== -1 && isChecked) {
       this.checkBoxes[index].value.push(inputValue);

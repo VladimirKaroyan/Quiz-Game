@@ -6,29 +6,45 @@ import {globals} from './globals';
   providedIn: 'root'
 })
 export class ApplicationService {
+  appId;
+  eventId;
+  companyToken;
   hostname = globals.getHostName();
   protocol = globals.getProtocol() + '//';
   getAppFieldsURL: string = this.protocol + this.hostname + '/get-app-fields/';
-  // getQuestionsURL: string = this.protocol + this.hostname + '/get-questions/55';
-  getQuestionsURL: string = '/assets/quiz-json.json';
+  getAppDataURL: string = this.protocol + this.hostname + '/api/v2/quizgame/info';
+  postDataURL: string = this.protocol + this.hostname + '/api/v2/quizgame/answer';
+
   requestOptions = {
     headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET'
+      'Access-Control-Allow-Methods': 'GET, POST'
     }
+  };
+  sendData = {
+    formFields: [],
+    answers: []
   };
 
   constructor(private http: HttpClient) {
   }
 
-  getQuestions() {
-    return this.http.get(this.getQuestionsURL, this.requestOptions);
+  getGameInfo() {
+    return this.http.get(this.getAppDataURL + '?appId=' + this.appId + '&eventId=' + this.eventId + '&token=' + this.companyToken + '', this.requestOptions);
   }
 
-  getAppFields(appId: any, eventId: any) {
-    return this.http.get(this.getAppFieldsURL + appId + '?eventId=' + eventId + '', this.requestOptions);
+  getAppFields() {
+    return this.http.get(this.getAppFieldsURL + this.appId + '?eventId=' + this.eventId + '', this.requestOptions);
     // For Local use function below
     // return this.http.get(this.getAppFieldsURL);
+  }
+
+  postAppData(answers) {
+    this.sendData['appId'] = this.appId;
+    this.sendData['eventId'] = this.eventId;
+    this.sendData['token'] = this.companyToken;
+    this.sendData['answers'] = answers;
+    return this.http.post(this.postDataURL, this.sendData, this.requestOptions);
   }
 }
