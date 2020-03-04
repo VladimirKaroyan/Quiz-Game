@@ -11,7 +11,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 
 export class QuestionsComponent implements OnInit {
-  isOnePage = true;
+  isOnePage = false;
   next_button_color = '#0069d9';
   showUserScore = false;
   currentQuestion = 0;
