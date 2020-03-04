@@ -17,6 +17,13 @@ div.answer mat-form-field {
   margin-bottom: 20px;
 }
 
+.border-30-white {
+  border-radius: 8px;
+  background-color: #fff;
+  border-color: #fff;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.37);
+}
+
 .question-bg-image {
   min-height: 200px;
 }

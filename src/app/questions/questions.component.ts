@@ -11,6 +11,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 
 export class QuestionsComponent implements OnInit {
+  isOnePage = false;
   next_button_color = '#0069d9';
   showUserScore = false;
   currentQuestion = 0;
@@ -42,7 +43,7 @@ export class QuestionsComponent implements OnInit {
             userAnswer: [],
             points: this.questionList[i]['point'],
             isRequired: this.questionList[i].required,
-            correct: false
+            correct: 'skipped'
           });
         }
       },
@@ -71,30 +72,36 @@ export class QuestionsComponent implements OnInit {
     return true;
   }
 
-  selectAnswer(answer) {
-    this.userAnswers[this.currentQuestion].userAnswer = [answer];
+  selectAnswer(questionId, answer) {
+    this.userAnswers[questionId].userAnswer = [answer];
+    if (!this.isOnePage) this.changeQuestionStatus(questionId);
   }
 
-  selectCheckBoxAnswer(answer, isChecked) {
+  selectCheckBoxAnswer(questionId, answer, isChecked) {
     if (isChecked) {
-      this.userAnswers[this.currentQuestion].userAnswer.push(answer);
+      this.userAnswers[questionId].userAnswer.push(answer);
     } else {
-      const valueInd = this.userAnswers[this.currentQuestion].userAnswer.indexOf(answer);
-      if (valueInd !== -1) this.userAnswers[this.currentQuestion].userAnswer.splice(valueInd, 1);
+      const valueInd = this.userAnswers[questionId].userAnswer.indexOf(answer);
+      if (valueInd !== -1) this.userAnswers[questionId].userAnswer.splice(valueInd, 1);
+    }
+    if (!this.isOnePage) this.changeQuestionStatus(questionId);
+  }
+
+  changeQuestionStatus(questionId) {
+    if (!this.userAnswers[questionId]['userAnswer'][0] || this.userAnswers[questionId]['userAnswer'][0].toString().trim().length === 0) {
+      this.curQuestionMessage = 'You missed the answer';
+      this.userAnswers[questionId]['correct'] = 'skipped';
+      this.curQuestionResult = 'Skipped';
+    } else {
+      this.curQuestionMessage = (this.compareAnswer(questionId)) ? 'Your answer is correct' : this.questionList[questionId]['incorrect_message'];
+      this.userAnswers[questionId]['correct'] = this.compareAnswer(questionId) ? 'right' : 'wrong';
+      this.curQuestionResult = (this.compareAnswer(this.currentQuestion) ? 'Correct' : 'Incorrect');
     }
   }
 
   changeQuestion() {
     let that = this;
-    if (!this.userAnswers[this.currentQuestion]['userAnswer'][0] || this.userAnswers[this.currentQuestion]['userAnswer'][0].toString().trim().length === 0) {
-      this.curQuestionMessage = 'You missed the answer';
-      this.userAnswers[this.currentQuestion]['correct'] = 'skipped';
-      this.curQuestionResult = 'Skipped';
-    } else {
-      this.curQuestionMessage = (this.compareAnswer(this.currentQuestion)) ? 'Your answer is correct' : this.questionList[this.currentQuestion]['incorrect_message'];
-      this.userAnswers[this.currentQuestion]['correct'] = this.compareAnswer(this.currentQuestion) ? 'right' : 'wrong';
-      this.curQuestionResult = (this.compareAnswer(this.currentQuestion) ? 'Correct' : 'Incorrect');
-    }
+    this.changeQuestionStatus(this.currentQuestion);
     this.showAnswerModal = true;
     setTimeout(() => {
       that.currentQuestion++;
@@ -130,17 +137,23 @@ export class QuestionsComponent implements OnInit {
     }
   }
 
+  reqQuestionsValid() {
+    return this.userAnswers.filter((answer) => {
+      return answer.isRequired && (!answer.userAnswer.length || answer.userAnswer[0].toString().trim() === '');
+    }).length === 0
+  }
+
   showScore() {
     // this.compareAnswers();
+    this.mainComp.showLoader = true;
     this.getScore();
-    this.showUserScore = true;
     this.appService.postAppData(this.userAnswers).subscribe(
       (result) => {
-        if (result['code'] == 200) {
-          this._snackBar.open(result['message'], "Close", {
-            duration: 4000,
-          });
-        }
+        this.mainComp.showLoader = false;
+        this.showUserScore = true;
+        setTimeout(() => {
+          this.quizResultPercent = this.score / this.totalPoints * 100;
+        }, 100);
         setTimeout("location.reload()", 3000);
       },
       (err) => {
@@ -150,8 +163,5 @@ export class QuestionsComponent implements OnInit {
         setTimeout("location.reload()", 3000);
         console.warn(err)
       });
-    setTimeout(() => {
-      this.quizResultPercent = this.score / this.totalPoints * 100;
-    }, 100);
   }
 }
