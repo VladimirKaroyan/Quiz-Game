@@ -1,7 +1,8 @@
 <div class="container" *ngIf="questionList">
   <div class="row questions-list" [hidden]="showUserScore">
     <div class="col-md-10 col-lg-8 col-sm-offset-2">
-      <div class="border-2" *ngFor="let question of questionList; index as questionNum" [hidden]="questionNum !== currentQuestion && isOnePage"
+      <div class="border-2" *ngFor="let question of questionList; index as questionNum"
+           [hidden]="questionNum !== currentQuestion && isOnePage"
            [class.border-30-white]="!isOnePage">
         <div class="justify-content-around"
              [class.d-flex]="question['question_image']"
@@ -60,10 +61,10 @@
               </div>
             </div>
           </div>
-          <div *ngIf="question['question_image']" class="question-bg-image"
+          <div *ngIf="question['question_image']" class="question-bg-image ml-2 mr-2"
                [class.w-50]="question['question_image_pos'] === 'right' || question['question_image_pos'] === 'left'"
                [class.w-100]="question['question_image_pos'] === 'down' || question['question_image_pos'] === 'left'"
-               [ngStyle]="{'background': 'url(' + question['question_image'] + ') ' + question['question_image_pos'].replace('up', 'top').replace('down', 'bottom') + '/auto 100% no-repeat'}">
+               [ngStyle]="{'background': 'url(\'' + question['question_image'] + '\') ' + question['question_image_pos'].replace('up', 'top').replace('down', 'bottom') + '/auto 100% no-repeat'}">
           </div>
         </div>
         <div class="modal show-answer-block"
