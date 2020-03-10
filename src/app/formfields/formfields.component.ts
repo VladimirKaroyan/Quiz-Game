@@ -16,6 +16,7 @@ export class FormfieldsComponent implements OnInit {
   states;
   countries;
   countryDefault;
+  categories;
   fields = {
     select: [],
     text: [],
@@ -24,7 +25,8 @@ export class FormfieldsComponent implements OnInit {
     multi: [],
     checkbox: [],
     stateInput: [],
-    countryInput: []
+    countryInput: [],
+    category: []
   };
   checkBoxes;
   form;
@@ -45,6 +47,7 @@ export class FormfieldsComponent implements OnInit {
         }
         if (formFields['states']) this.states = formFields['states'];
         if (formFields['countries']) this.countries = formFields['countries'];
+        if (formFields['categoryArray'].length) this.categories = formFields['categoryArray'];
         if (formFields['countryDefault']) this.countryDefault = formFields['countryDefault'];
         if (formFields['appFields'] && formFields['appFields'].length) {
           formFields['appFields'].forEach(one => {

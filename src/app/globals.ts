@@ -1,4 +1,4 @@
-const localHostName = 'dell.eyeframe.test';
+const localHostName = 'dell.highattendance.loc';
 const localProtocol = 'http:';
 const hostname = window.location.hostname;
 const protocol = window.location.protocol;
