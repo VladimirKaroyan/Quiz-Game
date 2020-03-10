@@ -13,6 +13,7 @@ export class ApplicationService {
   protocol = globals.getProtocol() + '//';
   getAppFieldsURL: string = this.protocol + this.hostname + '/get-app-fields/';
   getAppDataURL: string = this.protocol + this.hostname + '/api/v2/quizgame/info';
+  getStatesDataURL: string = this.protocol + this.hostname + '/get-states-data';
   postDataURL: string = this.protocol + this.hostname + '/api/v2/quizgame/answer';
 
   requestOptions = {
@@ -38,6 +39,10 @@ export class ApplicationService {
     return this.http.get(this.getAppFieldsURL + this.appId + '?eventId=' + this.eventId + '', this.requestOptions);
     // For Local use function below
     // return this.http.get(this.getAppFieldsURL);
+  }
+
+  getStates(country) {
+    return this.http.get(this.getStatesDataURL + '/' + country);
   }
 
   postAppData(answers) {

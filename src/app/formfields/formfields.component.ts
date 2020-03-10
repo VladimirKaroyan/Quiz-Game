@@ -87,6 +87,14 @@ export class FormfieldsComponent implements OnInit {
     });
   }
 
+  updateStates(country) {
+    this.appService.getStates(country).subscribe(
+      states => {
+        this.states = states['states'];
+      }
+    )
+  }
+
   onSubmit(formElement) {
     if (formElement.valid) {
       const fields = JSON.parse(JSON.stringify(formElement.value));

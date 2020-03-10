@@ -27,7 +27,9 @@
                         [class.col-md-6]="fields.select.length !== 0"
                         [class.col-md-12]="fields.select.length === 0">
           <mat-label [innerHTML]="fields.countryInput[0].title"></mat-label>
-          <mat-select [required]="fields.countryInput[0].required" [name]="fields.countryInput[0].name"
+          <mat-select [required]="fields.countryInput[0].required"
+                      [name]="fields.countryInput[0].name"
+                      (ngModelChange)="updateStates($event)"
                       [ngModel]="countryDefault">
             <mat-option *ngFor="let option of countries" [value]="option.code">
               {{option.name}}
@@ -50,7 +52,7 @@
                         [class.col-md-6]="fields.select.length !== 0"
                         [class.col-md-12]="fields.select.length === 0">
           <mat-label [innerHTML]="fields.category[0].title"></mat-label>
-          <mat-select [required]="fields.category[0].required" [name]="fields.category[0].name" ngModel>
+          <mat-select [required]="fields.category[0].required" name="category" ngModel>
             <mat-option *ngFor="let option of categories" [value]="option">
               {{option}}
             </mat-option>
