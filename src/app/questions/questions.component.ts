@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {BrowserModule, DomSanitizer} from '@angular/platform-browser'
 import {ApplicationService} from "../application.service";
 import {MainComponent} from "../main/main.component";
 import {Router} from '@angular/router';
@@ -11,7 +12,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 })
 
 export class QuestionsComponent implements OnInit {
-  isOnePage = false;
+  isOnePage = true;
+  headerText;
+  headerLogo;
   next_button_color = '#0069d9';
   showUserScore = false;
   currentQuestion = 0;
@@ -25,12 +28,16 @@ export class QuestionsComponent implements OnInit {
   quizResultPercent = 0;
   totalPoints = 0;
 
-  constructor(private appService: ApplicationService, private mainComp: MainComponent, private router: Router, private _snackBar: MatSnackBar) {
+  constructor(private appService: ApplicationService, private mainComp: MainComponent, private router: Router, private _snackBar: MatSnackBar, private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
     this.appService.getGameInfo().subscribe(
       gameData => {
+        this.isOnePage = gameData['is_one_page'];
+        this.headerText = this.sanitizer.bypassSecurityTrustHtml(gameData['header_text']);
+        console.log(this.headerText);
+        this.headerLogo = gameData['header_logo'];
         this.questionList = gameData['questions'];
         this.next_button_color = "#" + gameData['next_button_color'];
         this.mainComp.background_color = "#" + gameData['background_color'];

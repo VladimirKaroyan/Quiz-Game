@@ -1,95 +1,101 @@
 <div class="container" *ngIf="questionList">
   <div class="row questions-list" [hidden]="showUserScore">
     <div class="col-md-10 col-lg-8 col-sm-offset-2">
-      <div class="border-2" *ngFor="let question of questionList; index as questionNum"
-           [hidden]="questionNum !== currentQuestion && isOnePage"
-           [class.border-30-white]="!isOnePage">
-        <div class="justify-content-around"
-             [class.d-flex]="question['question_image']"
-             [class.flex-row]="question['question_image_pos'] === 'right'"
-             [class.flex-row-reverse]="question['question_image_pos'] === 'left'"
-             [class.flex-column]="question['question_image_pos'] === 'down'"
-             [class.flex-column-reverse]="question['question_image_pos'] === 'up'">
-          <div
-            [class.w-50]="question['question_image_pos'] === 'right' || question['question_image_pos'] === 'left'"
-            [class.w-100]="question['question_image_pos'] === 'down' || question['question_image_pos'] === 'left'">
-            <div class="question border-0 p-0 pb-3">
-              <h3>
+      <div *ngFor="let question of questionList; index as questionNum"
+           [hidden]="questionNum !== currentQuestion && isOnePage">
+        <div class="header-logo text-center mt-3 mb-3" *ngIf="headerLogo && questionNum === 0">
+          <img [src]="headerLogo" class="mw-100" alt="No Header Logo Image">
+        </div>
+        <div class="header-text text-center mt-3 mb-3" *ngIf="headerText && questionNum === 0"
+             [innerHTML]="headerText"></div>
+        <div class="border-2 border-30-white">
+          <div class="justify-content-around"
+               [class.d-flex]="question['question_image']"
+               [class.flex-row]="question['question_image_pos'] === 'right'"
+               [class.flex-row-reverse]="question['question_image_pos'] === 'left'"
+               [class.flex-column]="question['question_image_pos'] === 'down'"
+               [class.flex-column-reverse]="question['question_image_pos'] === 'up'">
+            <div
+              [class.w-50]="question['question_image_pos'] === 'right' || question['question_image_pos'] === 'left'"
+              [class.w-100]="question['question_image_pos'] === 'down' || question['question_image_pos'] === 'left'">
+              <div class="question border-0 p-0 pb-3">
+                <h3>
             <span [class.required-question]="question['required']"
                   [innerHTML]="questionNum + 1 + '. ' + question['title']"></span>
-                <span
-                  class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString() == '1' ? 'point' : 'points'}}</span>
-              </h3>
-            </div>
-            <div class="answers-block questions-radio" *ngIf="question['type'] === 'radio'">
-              <mat-radio-group [name]="question['name']">
-                <div *ngFor="let answer of question['options']; let answerNum = index"
-                     class="radio-button-group">
-                  <mat-radio-button
+                  <span
+                    class="badge badge-warning mat-background-primary">{{question['point'] }} {{question['point'].toString() == '1' ? 'point' : 'points'}}</span>
+                </h3>
+              </div>
+              <div class="answers-block questions-radio" *ngIf="question['type'] === 'radio'">
+                <mat-radio-group [name]="question['name']">
+                  <div *ngFor="let answer of question['options']; let answerNum = index"
+                       class="radio-button-group">
+                    <mat-radio-button
+                      color="primary"
+                      id="{{questionNum}}-{{answerNum}}"
+                      value="{{answer['key']}}"
+                      (change)="selectAnswer(questionNum, answer['key'])">
+                      {{answer.value}}
+                    </mat-radio-button>
+                    <!--              <mat-label [innerHTML]="answer.value"></mat-label>-->
+                  </div>
+                </mat-radio-group>
+              </div>
+              <div class="answers-block questions-checkbox" *ngIf="question['type'] === 'checkbox'">
+                <div *ngFor="let answer of question['options']; let answerNum = index" class="answers-box">
+                  <mat-checkbox
                     color="primary"
-                    id="{{questionNum}}-{{answerNum}}"
-                    value="{{answer['key']}}"
-                    (change)="selectAnswer(questionNum, answer['key'])">
-                    {{answer.value}}
-                  </mat-radio-button>
-                  <!--              <mat-label [innerHTML]="answer.value"></mat-label>-->
+                    id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
+                    value="{{answer.key}}"
+                    (change)="selectCheckBoxAnswer(questionNum, answer.key, $event.checked)">
+                    {{answer['value']}}
+                  </mat-checkbox>
+                  <!--            <mat-label [innerHTML]=""></mat-label>-->
                 </div>
-              </mat-radio-group>
-            </div>
-            <div class="answers-block questions-checkbox" *ngIf="question['type'] === 'checkbox'">
-              <div *ngFor="let answer of question['options']; let answerNum = index" class="answers-box">
-                <mat-checkbox
-                  color="primary"
-                  id="checkbox-{{questionNum}}-{{answerNum}}" [name]="question['name']"
-                  value="{{answer.key}}"
-                  (change)="selectCheckBoxAnswer(questionNum, answer.key, $event.checked)">
-                  {{answer['value']}}
-                </mat-checkbox>
-                <!--            <mat-label [innerHTML]=""></mat-label>-->
+              </div>
+              <div class="answers-block questions-text" *ngIf="question['type'] === 'text'">
+                <div class="answer">
+                  <mat-form-field>
+                    <input matInput
+                           [disabled]="inputsDisabled"
+                           type="text"
+                           id="{{questionNum}}-value"
+                           [name]="question['name']"
+                           (keyup)="selectAnswer(questionNum, $event.target['value'])">
+                  </mat-form-field>
+                </div>
               </div>
             </div>
-            <div class="answers-block questions-text" *ngIf="question['type'] === 'text'">
-              <div class="answer">
-                <mat-form-field>
-                  <input matInput
-                         [disabled]="inputsDisabled"
-                         type="text"
-                         id="{{questionNum}}-value"
-                         [name]="question['name']"
-                         (keyup)="selectAnswer(questionNum, $event.target['value'])">
-                </mat-form-field>
+            <div *ngIf="question['question_image']" class="question-bg-image ml-2 mr-2"
+                 [class.w-50]="question['question_image_pos'] === 'right' || question['question_image_pos'] === 'left'"
+                 [class.w-100]="question['question_image_pos'] === 'down' || question['question_image_pos'] === 'left'"
+                 [ngStyle]="{'background': 'url(\'' + question['question_image'] + '\') ' + question['question_image_pos'].replace('up', 'top').replace('down', 'bottom') + '/auto 100% no-repeat'}">
+            </div>
+          </div>
+          <div class="modal show-answer-block"
+               [class.hidden]="!showAnswerModal"
+               [class.correct-answer]="curQuestionResult === 'Correct'"
+               [class.incorrect-answer]="curQuestionResult === 'Incorrect'"
+               tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">{{curQuestionResult}}</h5>
+                </div>
+                <div class="modal-body pb-0">
+                  <p>{{curQuestionMessage}}</p>
+                </div>
               </div>
             </div>
           </div>
-          <div *ngIf="question['question_image']" class="question-bg-image ml-2 mr-2"
-               [class.w-50]="question['question_image_pos'] === 'right' || question['question_image_pos'] === 'left'"
-               [class.w-100]="question['question_image_pos'] === 'down' || question['question_image_pos'] === 'left'"
-               [ngStyle]="{'background': 'url(\'' + question['question_image'] + '\') ' + question['question_image_pos'].replace('up', 'top').replace('down', 'bottom') + '/auto 100% no-repeat'}">
+          <div class="text-right mt-1 mb-1">
+            <button mat-raised-button
+                    *ngIf="isOnePage"
+                    (click)="changeQuestion()"
+                    [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].toString().trim().length === 0"
+                    [ngStyle]="{'background-color': next_button_color}"
+                    class="btn btn-primary">{{ (questionNum === questionList.length - 1) ? 'Submit Quiz' : 'Next' }}</button>
           </div>
-        </div>
-        <div class="modal show-answer-block"
-             [class.hidden]="!showAnswerModal"
-             [class.correct-answer]="curQuestionResult === 'Correct'"
-             [class.incorrect-answer]="curQuestionResult === 'Incorrect'"
-             tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">{{curQuestionResult}}</h5>
-              </div>
-              <div class="modal-body pb-0">
-                <p>{{curQuestionMessage}}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="text-right mt-1 mb-1">
-          <button mat-raised-button
-                  *ngIf="isOnePage"
-                  (click)="changeQuestion()"
-                  [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].toString().trim().length === 0"
-                  [ngStyle]="{'background-color': next_button_color}"
-                  class="btn btn-primary">{{ (questionNum === questionList.length - 1) ? 'Submit Quiz' : 'Next' }}</button>
         </div>
       </div>
       <div class="text-right mt-1 mb-1">
@@ -98,7 +104,8 @@
                 (click)="showScore()"
                 [disabled]="!reqQuestionsValid()"
                 [ngStyle]="{'background-color': next_button_color}"
-                class="btn btn-primary">Submit Quiz</button>
+                class="btn btn-primary">Submit Quiz
+        </button>
       </div>
     </div>
   </div>
