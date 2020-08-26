@@ -25,8 +25,11 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
   ]
 })
 export class MainComponent implements OnInit {
-  showLoader = true;
-  isCompletedFields = false;
+  showLoader: boolean = true;
+  isCompletedFields: boolean = false;
+  formFieldData;
+  pageStyle: string;
+  showUserScore: boolean = false;
   background_color;
   background_image;
 

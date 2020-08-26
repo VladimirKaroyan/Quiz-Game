@@ -1,4 +1,6 @@
-<app-header [@visibilityChanged]="isCompletedFields ? 'hidden' : 'shown'"></app-header>
-<app-formfields [@visibilityChanged]="isCompletedFields ? 'hidden' : 'shown'"></app-formfields>
-<app-questions [@visibilityChanged]="isCompletedFields ? 'shown' : 'hidden'" [ngStyle]="{'background-color': background_color, 'background-image': background_image}"></app-questions>
+<app-header [@visibilityChanged]="isCompletedFields || showUserScore  ? 'hidden' : 'shown'"></app-header>
+<app-formfields [@visibilityChanged]="isCompletedFields || showUserScore ? 'hidden' : 'shown'"></app-formfields>
+<app-questions
+        [@visibilityChanged]="isCompletedFields || pageStyle === 'one-page' ? 'shown' : 'hidden'"
+        [ngStyle]="{'background-color': background_color, 'background-image': background_image}"></app-questions>
 <app-loader *ngIf="showLoader"></app-loader>

@@ -3,7 +3,7 @@ import {MainComponent} from "../main/main.component";
 import {ApplicationService} from "../application.service";
 import {Router} from '@angular/router';
 import {Title} from "@angular/platform-browser";
-import {FormControl, Validators} from "@angular/forms";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'app-formfields',
@@ -17,9 +17,11 @@ export class FormfieldsComponent implements OnInit {
   countries;
   countryDefault;
   categories;
+  stateName;
   fields = {
     select: [],
     text: [],
+    email: [],
     textarea: [],
     radio: [],
     multi: [],
@@ -31,7 +33,7 @@ export class FormfieldsComponent implements OnInit {
   checkBoxes;
   form;
 
-  constructor(private mainComponent: MainComponent, private appService: ApplicationService, private titleService: Title, private router: Router) {
+  constructor(public mainComponent: MainComponent, private appService: ApplicationService, private titleService: Title, private router: Router) {
   }
 
   ngOnInit() {
@@ -91,8 +93,13 @@ export class FormfieldsComponent implements OnInit {
     this.appService.getStates(country).subscribe(
       states => {
         this.states = states['states'];
+        this.stateName = states['states'][0] ? states['states'][0]['code'] : null;
       }
     )
+  }
+
+  changeForm(formData: NgForm) {
+    this.mainComponent.formFieldData = formData;
   }
 
   onSubmit(formElement) {

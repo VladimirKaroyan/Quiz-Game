@@ -97,7 +97,7 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [MainComponent, AppComponent],
+  providers: [MainComponent, AppComponent, FormfieldsComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,5 +1,5 @@
 <div class="container" *ngIf="questionList">
-  <div class="row questions-list" [hidden]="showUserScore">
+  <div class="row questions-list" [hidden]="mainComp.showUserScore">
     <div class="col-md-10 col-lg-8 col-sm-offset-2">
       <div *ngFor="let question of questionList; index as questionNum"
            [hidden]="questionNum !== currentQuestion && isOnePage">
@@ -92,7 +92,8 @@
             <button mat-raised-button
                     *ngIf="isOnePage"
                     (click)="changeQuestion()"
-                    [disabled]="question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].toString().trim().length === 0"
+                    [disabled]="(question['required'] && userAnswers[questionNum]['userAnswer'] && userAnswers[questionNum]['userAnswer'].toString().trim().length === 0) ||
+                    (mainComp.pageStyle === 'one-page' && questionNum === questionList.length - 1 && !mainComp?.formFieldData?.valid)"
                     [ngStyle]="{'background-color': next_button_color}"
                     class="btn btn-primary">{{ (questionNum === questionList.length - 1) ? 'Submit Quiz' : 'Next' }}</button>
           </div>
@@ -102,14 +103,14 @@
         <button mat-raised-button
                 *ngIf="!isOnePage"
                 (click)="showScore()"
-                [disabled]="!reqQuestionsValid()"
+                [disabled]="!reqQuestionsValid() || (mainComp.pageStyle === 'one-page' && !mainComp?.formFieldData?.valid)"
                 [ngStyle]="{'background-color': next_button_color}"
                 class="btn btn-primary">Submit Quiz
         </button>
       </div>
     </div>
   </div>
-  <div class="row user-result" [hidden]="!showUserScore">
+  <div class="row user-result" [hidden]="!mainComp.showUserScore">
     <div class="col-md-12">
       <h1 class="text-center">
         Your score: {{ score.toString() }} {{ score.toString() == '1' ? 'point' : 'points' }}

@@ -1,4 +1,4 @@
-const localHostName = 'dell.highattendance.loc';
+const localHostName = 'dell.highattendance.test';
 const localProtocol = 'http:';
 const hostname = window.location.hostname;
 const protocol = window.location.protocol;

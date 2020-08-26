@@ -4,6 +4,7 @@ import {ApplicationService} from "../application.service";
 import {MainComponent} from "../main/main.component";
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {FormfieldsComponent} from "../formfields/formfields.component";
 
 @Component({
   selector: 'app-questions',
@@ -16,7 +17,6 @@ export class QuestionsComponent implements OnInit {
   headerText;
   headerLogo;
   next_button_color = '#0069d9';
-  showUserScore = false;
   currentQuestion = 0;
   inputsDisabled = false;
   questionList;
@@ -28,13 +28,14 @@ export class QuestionsComponent implements OnInit {
   quizResultPercent = 0;
   totalPoints = 0;
 
-  constructor(private appService: ApplicationService, private mainComp: MainComponent, private router: Router, private _snackBar: MatSnackBar, private sanitizer: DomSanitizer) {
+  constructor(private appService: ApplicationService, private mainComp: MainComponent, private formFieldComp: FormfieldsComponent, private router: Router, private _snackBar: MatSnackBar, private sanitizer: DomSanitizer) {
   }
 
   ngOnInit() {
     this.appService.getGameInfo().subscribe(
       gameData => {
         this.isOnePage = gameData['is_one_page'];
+        this.mainComp.pageStyle = gameData['page_style'];
         this.headerText = this.sanitizer.bypassSecurityTrustHtml(gameData['header_text']);
         console.log(this.headerText);
         this.headerLogo = gameData['header_logo'];
@@ -153,11 +154,12 @@ export class QuestionsComponent implements OnInit {
   showScore() {
     // this.compareAnswers();
     this.mainComp.showLoader = true;
+    if (this.mainComp.pageStyle === 'one-page') this.formFieldComp.onSubmit(this.mainComp.formFieldData);
     this.getScore();
     this.appService.postAppData(this.userAnswers).subscribe(
       (result) => {
         this.mainComp.showLoader = false;
-        this.showUserScore = true;
+        this.mainComp.showUserScore = true;
         setTimeout(() => {
           this.quizResultPercent = this.score / this.totalPoints * 100;
         }, 100);
